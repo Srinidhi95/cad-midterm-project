@@ -29,13 +29,34 @@ func func_array[20]; // max 20 functions
 
 
 
-void readFunction()
+func readFunction(char * in_line)
 {
-	
 	// parse each function
+    
+	func cur_func;
+    
+    int i;
 	
-}
+	if (in_line[0] != 'f') {
+		printf("Error: Function must be in format fxx where xx is the function number.\n");
+		exit(1);
+	}
+	
+	if (in_line[2] == ' ') {
+		// function id = (in_line[1] - 48)
+	}
+	else {
+		// function id = ((10 * (in_line[2] - 48)) + (in_line[1] - 48))
+	}
 
+	
+	while (in_line[i] != '\0') {
+		// parse cubes
+	}
+
+	return cur_func;
+    
+}
 
 
 int main (int argc, char* argv[])
