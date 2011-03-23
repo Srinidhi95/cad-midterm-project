@@ -69,8 +69,10 @@ int main (int argc, char* argv[])
         exit(1); 
     }
     
-    char line[80]; // to store the line
+    //char line[80]; // to store the line
 
+    char *line = malloc(80);
+    
     int count;
     count = 1;
 	
