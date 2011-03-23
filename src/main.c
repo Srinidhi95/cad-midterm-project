@@ -11,12 +11,22 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <xlocale.h>
+#include "types.h"
 
 #define ARG_NUM 2 // number of arguments to expect
 
 int VAR_FLAG = 0; // Set to 1 when number of variable has been read
 int FUNC_FLAG = 0; // Set to 1 when number of functions has been read
 int BODY_FLAG = 0; // Set to 1 when body of input file is entered
+
+
+int numberOfFunctions;
+int numberOfVariables;
+
+
+// declare array of functions
+func func_array[20]; // max 20 functions
+
 
 
 void readFunction()
@@ -65,9 +75,7 @@ int main (int argc, char* argv[])
     count = 1;
 	
 	int j = 0;
-	
-	int numberOfFunctions;
-	int numberOfVariables;
+
     
     while (fgets(line, 80, fp) != NULL)
     {
@@ -80,6 +88,7 @@ int main (int argc, char* argv[])
 		{
 			// processing the functions
 			
+		
 			
 			printf("Line Contents: %s", line);
 			
@@ -90,8 +99,7 @@ int main (int argc, char* argv[])
 			
 			//printf("j=%d\n", j);
 			j++;
-			
-			
+		
 			
 		}
 		
