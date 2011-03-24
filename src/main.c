@@ -12,6 +12,7 @@
 #include <ctype.h>
 #include <xlocale.h>
 #include "types.h"
+#include <string.h>
 
 #define ARG_NUM 2 // number of arguments to expect
 
@@ -29,13 +30,18 @@ func func_array[20]; // max 20 functions
 
 
 
-func readFunction(char * in_line)
+func readFunction(char *in_line)
 {
 	// parse each function
     
 	func cur_func;
-    
-    int i;
+	int fid; // function id
+	
+	char *str1;
+	
+	printf("Incoming string is: %s\n", in_line);
+
+    int i = 0;
 	
 	if (in_line[0] != 'f') {
 		printf("Error: Function must be in format fxx where xx is the function number.\n");
@@ -43,15 +49,26 @@ func readFunction(char * in_line)
 	}
 	
 	if (in_line[2] == ' ') {
-		// function id = (in_line[1] - 48)
+		fid = (in_line[1] - 48);
+		//printf("fid = %d\n", fid);
 	}
 	else {
-		// function id = ((10 * (in_line[2] - 48)) + (in_line[1] - 48))
+		fid = ((10 * (in_line[1] - 48)) + (in_line[2] - 48));
+		//printf("fid = %d\n", fid);
+		
 	}
 
+	cur_func.fid = fid;
 	
-	while (in_line[i] != '\0') {
-		// parse cubes
+	str1 = strtok(in_line, " = ");
+	str1 = strtok(NULL, " + "); 
+	
+	while (str1 != NULL) {
+		
+		str1 = strtok(NULL, " + ");
+		cur_func.cubes[i] = str1; // CAUSES SEGFAULT
+		i++;
+		
 	}
 
 	return cur_func;
@@ -70,7 +87,7 @@ int main (int argc, char* argv[])
     }
     
     FILE * fp; // to open input file
-    size_t * size_of_file;
+    int size_of_file;
     
     struct stat file_stat;
      
@@ -81,7 +98,7 @@ int main (int argc, char* argv[])
     }
     
     size_of_file = file_stat.st_size;
-    printf("Size of file: %d\n", (int) size_of_file);
+    printf("Size of file: %d\n", size_of_file);
     
     fp = fopen(argv[1], "r"); // open file for reading
     if (fp == NULL) 
@@ -90,9 +107,9 @@ int main (int argc, char* argv[])
         exit(1); 
     }
     
-    //char line[80]; // to store the line
+    char line[80]; // to store the line
 
-    char *line = malloc(80);
+    //char *line = malloc(80);
     
     int count;
     count = 1;
@@ -111,9 +128,24 @@ int main (int argc, char* argv[])
 		{
 			// processing the functions
 			
-		
+			func myFunction;
 			
-			printf("Line Contents: %s", line);
+			myFunction = readFunction(line);
+			
+			int x = 0;
+			
+			while (myFunction.cubes[x] != '\0') {
+				printf("Cube[%d] = %s\n", x, myFunction.cubes[x]);
+				x++;
+			}
+			
+			
+			//printf("Cube[0] of function is: %s\n", myFunction.cubes[0]);
+			//printf("Cube[1] of function is: %s\n", myFunction.cubes[1]);
+
+			printf("Function ID = %d\n", myFunction.fid);
+			
+		//	printf("Line Contents: %s\n", line);
 			
 			if (j == numberOfFunctions)
 			{

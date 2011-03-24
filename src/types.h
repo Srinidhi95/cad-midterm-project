@@ -12,7 +12,6 @@ typedef struct
 	char kernels[15][26];
 	char cokernels[15][26];
     char * cubes[26];
-    
 
 } func;
 
