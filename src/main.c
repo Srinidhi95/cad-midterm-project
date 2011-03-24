@@ -39,6 +39,11 @@ func readFunction(char *in_line)
 	
 	char *str1;
 	
+	if (in_line[strlen(in_line) - 1] == '\n') {
+		in_line[strlen(in_line) - 1] = '\0';
+	}
+	
+	
 	printf("Incoming string is: %s\n", in_line);
 
     int i = 0;
@@ -76,6 +81,26 @@ func readFunction(char *in_line)
 }
 
 
+void printCubes(func function)
+{
+	// prints cubes of given function
+	
+	int i = 0;
+	
+	while (function.cubes[i] != '\0') {
+		printf("%d\t%s\n", function.fid, function.cubes[i]);
+		i++;
+	}
+	
+	
+	
+}
+
+
+
+
+
+
 int main (int argc, char* argv[])
 {
     
@@ -89,15 +114,15 @@ int main (int argc, char* argv[])
     FILE * fp; // to open input file
     int size_of_file;
     
-    struct stat file_stat;
+    struct stat file_stat; // to store file statistics
      
     if (stat(argv[1], &file_stat) < 0)
     {
-        perror(argv[0]);
+        perror(argv[0]); // file not found
         exit(1);
     }
     
-    size_of_file = file_stat.st_size;
+    size_of_file = file_stat.st_size; // get size of file
     printf("Size of file: %d\n", size_of_file);
     
     fp = fopen(argv[1], "r"); // open file for reading
@@ -132,13 +157,17 @@ int main (int argc, char* argv[])
 			
 			myFunction = readFunction(line);
 			
-			int x = 0;
+			func_array[j] = myFunction; // store function in function array
+		
+			printCubes(myFunction);
 			
-			while (myFunction.cubes[x] != '\0') {
+		//	int x = 0;
+			
+		/*	while (myFunction.cubes[x] != '\0') {
 				printf("Cube[%d] = %s\n", x, myFunction.cubes[x]);
 				x++;
 			}
-			
+		*/	
 			
 			//printf("Cube[0] of function is: %s\n", myFunction.cubes[0]);
 			//printf("Cube[1] of function is: %s\n", myFunction.cubes[1]);
