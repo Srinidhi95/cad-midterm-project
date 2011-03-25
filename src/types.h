@@ -34,14 +34,6 @@ typedef struct
 	int numCubes;
 	int numVars;
 
-	
-	// for C implementation
-/*	char * kernels[26];
-	char * cokernels[26];
-    char * cubes[26];
-*/
-
-	
 	// for C++ implementation
 	
 	string kernels[26];

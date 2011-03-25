@@ -1,5 +1,5 @@
 all:
-	g++ -o cad main.cpp
+	g++ -o cad -g main.cpp
 
 
 old:

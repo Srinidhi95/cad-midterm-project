@@ -16,7 +16,7 @@
 
 using namespace std;
 
-#define ARG_NUM 2 // number of arguments to expect
+#define ARG_NUM 2 // minimum number of arguments to expect
 
 int VAR_FLAG = 0; // Set to 1 when number of variable has been read
 int FUNC_FLAG = 0; // Set to 1 when number of functions has been read
@@ -24,18 +24,58 @@ int BODY_FLAG = 0; // Set to 1 when body of input file is entered
 int END_FLAG = 0; // Set to 1 when all functions have been read
 int DONE_FLAG = 0; // Set to 1 when .e is reached correctly
 
-
 int numberOfFunctions;
 int numberOfVariables;
-int numberofCubes;
+int numberOfCubes;
 
 
 // declare array of functions
 func func_array[20]; // max 20 functions
 
 
-// TODO: print list of cubes (check for duplicates!)
-// TODO: print kernel-matrix table
+void divide (func f1, string divisor)
+{
+	string cur_cube;
+	int pos;
+	int track = 0;
+	
+	cout << "numCubes = " << f1.numCubes << endl;
+	
+	for (int c = 0; c < f1.numCubes; c++) 
+	{
+		cur_cube = f1.cubes[c];
+		
+		cout << "Current Cube: " << cur_cube << endl;
+		
+		pos = cur_cube.find(divisor);
+		
+		if (pos != string::npos) {
+			// found
+			cout << "Found at position " << pos << endl;
+			cout << "Before: " << cur_cube << endl;
+			
+			cur_cube.replace(pos, 1, "");
+			track++;
+			
+			cout << "After: " << cur_cube << endl;
+		}
+		else {
+			cout << "Not found" << endl;
+			cur_cube = "";
+		}
+		
+		
+		
+	}
+	
+	if (track < 2) {
+		// 
+	}
+	else {
+		//
+	}
+
+}
 
 
 func readFunction(string in_line)
@@ -44,6 +84,7 @@ func readFunction(string in_line)
     
 	func cur_func;
 	int fid; // function id
+	int nCubes = 0; // number of cubes
 	
 	char * str1;
 	
@@ -97,17 +138,19 @@ func readFunction(string in_line)
 		
 		str1 = strtok(NULL, " + ");
 		if (str1 != NULL) {
-			numberofCubes++;
+			numberOfCubes++;
+			nCubes++;
 			cur_func.cubes[i] = str1;			
 		}
 			i++;
 		
 	}
 	
+	cur_func.numCubes = nCubes;
+	
 	return cur_func;
     
 }
-
 
 void printCubes(func function)
 {
@@ -126,35 +169,43 @@ void printCubes(func function)
 
 bool isPresent(string array[], string query)
 {
+	// returns true if query is found in array[]
+	
 	int i;
-	cout << "Reached isPresent" << endl;
+	//cout << "Reached isPresent" << endl;
 	
 	while (!array[i].empty()) {
 		if (array[i] == query) {
 			// found
+			//cout << "Found!" << endl;
 			return true;
 		}
 		i++;
 	}
-	
+//	cout << "Not Found." << endl;
 	return false;
 }
 
 void printAllCubes()
 {
+	// prints all cubes
+	
+	// TODO: Return string array as well - perhaps with silent option?
+	// TODO: Sort cubes by alphabetical order
+	
 	int i;
 	int j;
 	int k = 0;
 	int x;
 	
-	string printed[numberofCubes]; // array of printed cubes
-								   //isPresent(printed, "test");
+	string printed[numberOfCubes]; // array of printed cubes
+	
 	
 	for (i = 0; i < numberOfFunctions; i++) {
 		// for each function, add its cube to the printed array only if it isn't in it
 		j = 0;
 		while (!func_array[i].cubes[j].empty()) {
-			cout << "i=" << i << " j=" << j << " k=" << k << endl;
+			//cout << "i=" << i << " j=" << j << " k=" << k << endl; // for diagnostic info
 			if (!isPresent(printed, func_array[i].cubes[j])) {
 				// not found - add it to array
 				printed[k] = func_array[i].cubes[j];
@@ -174,9 +225,17 @@ void printAllCubes()
 	
 }
 
+// TODO: print kernel-matrix table
 
 void printKernelMatrix()
 {
+	// first line is unique cubes - 4 tabs
+	// second line is header - 0 tabs
+	// third line is seperator - 0 tabs (use string n times where n = number of unique cubes + 4)
+	string divider = "---------";
+	
+	cout << "Kernels" << "\t\t" << "ID" << '\t' << "R\\C" << '\t' << endl;
+	cout << divider << divider << divider << divider << divider << endl;
 	
 	
 	
@@ -336,11 +395,23 @@ int main (int argc, char* argv[])
 	int m; //= 0;
 	for (m = 0; m < numberOfFunctions; m++) {
 		printCubes(func_array[m]);
-	}
-    
-	cout << "Number of cubes: " << numberofCubes << endl;
 	
-	printAllCubes();
+    
+	
+
+	//cout << "Function ID: " << func_array[m].fid << endl;
+	//cout << "numCubes: " << func_array[m].numCubes << endl;
+	}
+	
+	cout << "Number of cubes: " << numberOfCubes << endl;
+	//func newFunc;
+	
+	divide(func_array[0], "b");
+	
+	//printAllCubes();
+	
+	//printKernelMatrix();
+	
 	// done reading file
 	
 	
