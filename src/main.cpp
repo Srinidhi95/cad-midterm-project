@@ -20,6 +20,8 @@ using namespace std;
 int VAR_FLAG = 0; // Set to 1 when number of variable has been read
 int FUNC_FLAG = 0; // Set to 1 when number of functions has been read
 int BODY_FLAG = 0; // Set to 1 when body of input file is entered
+int END_FLAG = 0; // Set to 1 when all functions have been read
+int DONE_FLAG = 0; // Set to 1 when .e is reached correctly
 
 
 int numberOfFunctions;
@@ -55,10 +57,18 @@ func readFunction(string in_line)
 	
     int i = 0;
 	
+	if (line == ".e" or line == ".e\n") {
+		cout << "Should be here" << endl;
+		printf("Error: You must have a blank line between body and .e\n");
+		exit(1);
+	}
+	
 	if (line[0] != 'f') {
 		printf("Error: Function must be in format fxx where xx is the function number.\n");
 		exit(1);
 	}
+	
+
 	
 	if (line[2] == ' ') {
 		fid = (line[1] - 48);
@@ -99,8 +109,6 @@ func readFunction(string in_line)
 void printCubes(func function)
 {
 	// prints cubes of given function
-	
-	//cout << "Reached printCubes function" << endl;
 	
 	int i = 0;
 	
@@ -148,8 +156,6 @@ int main (int argc, char* argv[])
     
     char cline[80]; // to store the line
 	//string line;
-
-    //char *line = malloc(80);
     
     int count;
     count = 1;
@@ -157,7 +163,7 @@ int main (int argc, char* argv[])
 	int j = 0;
 	
     
-    while (fgets(cline, 80, fp) != NULL)
+    while (fgets(cline, 80, fp) != NULL && DONE_FLAG == 0)
     {
 		// read in the file one line at a time
 		// 1st line is number of local functions
@@ -166,13 +172,43 @@ int main (int argc, char* argv[])
 		string line(cline); // creates a c++ string from the cstring returned by fgets
 		
 		
-			if (VAR_FLAG == 1 && FUNC_FLAG == 1 && BODY_FLAG == 1) // start reading functions
+		if (VAR_FLAG == 1 && FUNC_FLAG == 1 && BODY_FLAG == 1 && END_FLAG == 1) 
+		{
+			
+			// check for .e
+			
+			if (line == ".e" or line == ".e\n") {
+				cout << "Finished reading input file." << endl;
+				DONE_FLAG = 1;
+			}
+			else {
+				cout << "Error: End of file indicator (.e) is missing." << endl;
+				exit(1);
+			}
+
+			
+		}
+		
+		
+			if (VAR_FLAG == 1 && FUNC_FLAG == 1 && BODY_FLAG == 1 && END_FLAG == 0) // start reading functions
 		{
 			// processing the functions
+		
+		
 			
-			// TODO: need check for .e (end of file)
+			if (line[0] == '\n' && j == (numberOfFunctions)) {
+				END_FLAG = 1;				
+			}
+			
+			if (line[0] == '\n' && j < (numberOfFunctions)) {
+				printf("Error: You specified %d functions. Only %d were read.\n", numberOfFunctions, j);
+			}
+			
 	
-			func_array[j] = readFunction(line);
+			if (line[0] != '\n' && line != ".e") {
+				
+				func_array[j] = readFunction(line); // read function into array
+			
 			
 			//printCubes(func_array[j]);
 			
@@ -183,7 +219,7 @@ int main (int argc, char* argv[])
 			
 			j++;
 			
-			
+			}
 		}
 		
 		
