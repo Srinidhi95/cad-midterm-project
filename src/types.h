@@ -38,10 +38,21 @@ typedef struct
 	
 	string kernels[26];
 	string cokernels[26];
-	string cubes[26];
+	string cubes[10];
+	
+	string variables[26];
 	
 	
 } func;
+
+
+
+
+typedef struct
+{
+	string data [100];
+	
+} str_array;
 
 
 #ifndef NULL
