@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include "types.h"
 
+
 #include <iostream>
 #include <string>
 
@@ -26,6 +27,7 @@ int DONE_FLAG = 0; // Set to 1 when .e is reached correctly
 
 int numberOfFunctions;
 int numberOfVariables;
+int numberofCubes;
 
 
 // declare array of functions
@@ -95,6 +97,7 @@ func readFunction(string in_line)
 		
 		str1 = strtok(NULL, " + ");
 		if (str1 != NULL) {
+			numberofCubes++;
 			cur_func.cubes[i] = str1;			
 		}
 			i++;
@@ -121,6 +124,63 @@ void printCubes(func function)
 	
 }
 
+bool isPresent(string array[], string query)
+{
+	int i;
+	cout << "Reached isPresent" << endl;
+	
+	while (!array[i].empty()) {
+		if (array[i] == query) {
+			// found
+			return true;
+		}
+		i++;
+	}
+	
+	return false;
+}
+
+void printAllCubes()
+{
+	int i;
+	int j;
+	int k = 0;
+	int x;
+	
+	string printed[numberofCubes]; // array of printed cubes
+								   //isPresent(printed, "test");
+	
+	for (i = 0; i < numberOfFunctions; i++) {
+		// for each function, add its cube to the printed array only if it isn't in it
+		j = 0;
+		while (!func_array[i].cubes[j].empty()) {
+			cout << "i=" << i << " j=" << j << " k=" << k << endl;
+			if (!isPresent(printed, func_array[i].cubes[j])) {
+				// not found - add it to array
+				printed[k] = func_array[i].cubes[j];
+				k++;
+			}
+			
+			
+			j++;
+		}
+		
+		
+	}
+	
+	for (x = 0; x < k ; x++) {
+		cout << printed[x] << endl;
+	}
+	
+}
+
+
+void printKernelMatrix()
+{
+	
+	
+	
+}
 
 
 int main (int argc, char* argv[])
@@ -278,7 +338,11 @@ int main (int argc, char* argv[])
 		printCubes(func_array[m]);
 	}
     
+	cout << "Number of cubes: " << numberofCubes << endl;
+	
+	printAllCubes();
 	// done reading file
+	
 	
 	
 	return 0;
