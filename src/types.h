@@ -1,6 +1,31 @@
 #ifndef _TYPES_H
 #define _TYPES_H
 
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+
+/*
+class func {
+public:
+	
+	int fid;
+	int numVars;
+	int numCubes;
+	
+	string kernels[];
+	string cokernels[];
+	string cubes[];
+	
+	
+};
+
+
+*/
+
+
 
 typedef struct
 {
@@ -8,11 +33,22 @@ typedef struct
 	int fid;
 	int numCubes;
 	int numVars;
-	//char cubes[15][26]; // stores 15 cubes of 26 characters each
-	char kernels[15][26];
-	char cokernels[15][26];
-    char * cubes[26];
 
+	
+	// for C implementation
+/*	char * kernels[26];
+	char * cokernels[26];
+    char * cubes[26];
+*/
+
+	
+	// for C++ implementation
+	
+	string kernels[26];
+	string cokernels[26];
+	string cubes[26];
+	
+	
 } func;
 
 
