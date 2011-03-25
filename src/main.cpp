@@ -33,13 +33,158 @@ int numberOfCubes;
 func func_array[20]; // max 20 functions
 
 
+bool isPresent(string array[], string query)
+{
+	// returns true if query is found in array[]
+	
+	int i;
+	//cout << "Reached isPresent" << endl;
+	
+	while (!array[i].empty()) {
+		if (array[i] == query) {
+			// found
+			//cout << "Found!" << endl;
+			return true;
+		}
+		i++;
+	}
+	//	cout << "Not Found." << endl;
+	return false;
+}
+
+
+int lengthOfArray(string array [])
+{
+	int i;
+	while (!array[i].empty()) {
+		i++;
+	}
+	
+	return i;
+	
+}
+
+
+str_array str_sort(string array [])
+{
+
+	string temp;
+	int flag = 1; 
+	int i = 0;
+	int j = 0;
+	
+	while (flag == 1) {
+		flag = 0;
+		i = 0;
+		while (!array[i].empty()) {
+			
+			cout << "Current cube: " << array[i] << endl;
+			
+			
+			if (!array[i+1].empty()) {
+				
+				if (array[i].length() > array[i+1].length())
+				{
+					temp = array[i];
+					array[i] = array[i+1];
+					array[i+1] = temp;
+					flag = 1;
+				}
+			
+			}
+			
+			i++;
+		}
+		
+
+		
+	}
+	
+	// sorted by length
+	
+	int min_length = array[0].length();
+	int max_length = array[lengthOfArray(array) - 1].length();
+	
+	cout << "Min = " << min_length << " Max = " << max_length << endl;
+	j = 0;
+			
+		for (i = min_length; i <= max_length; i++) 
+		{
+			cout << "In second sort, flag = " << flag << endl;
+			
+			flag = 1;
+			
+			while (flag == 1)
+			{
+				// TODO: Fix sorting, j is not incremented correctly
+				
+				flag = 0;
+				//j = 0;
+				if (!array[j+1].empty()) 
+				{
+					cout << "j=" << j << endl;
+					
+					//printf("Array[%d].length = %d, %d", j, array[j].length(), array[j+1].length());
+					
+					cout << array[j] << " " << array[j+1] << endl;
+					
+					if ((array[j].length() == array[j+1].length()) && (array[j] > array[j+1]))
+					{
+						cout << "Swapping" << endl;
+						temp = array[i];
+						array[i] = array[i+1];
+						array[i+1] = temp;
+						flag = 1;
+							j++;
+					}
+					
+				}
+								
+						}
+						
+					
+		}
+		
+		
+	
+	
+	
+	/*
+	 if ((array[i] > array[i+1]) and (array[i].length() >= array[i+1].length()))
+	 {
+	 cout << "Swapping" << endl;
+	 temp = array[i];
+	 array[i] = array[i+1];
+	 array[i+1] = temp;
+	 flag = 1;
+	 
+	 
+	 }
+	 */
+	
+	
+	
+	str_array toReturn;
+	j = 0;
+	
+	while (!array[j].empty()) {
+		toReturn.data[j] = array[j];
+		j++;
+	}
+	
+	//toReturn.data = array;
+	
+	return toReturn;
+	
+}
+
 void divide (func f1, string divisor)
 {
-	string cur_cube;
-	int pos;
-	int track = 0;
+	string cur_cube; 
+	int pos;			//position of divisor in cube
+	int track = 0;		//how many cubes the divisor is present in
 	
-	cout << "numCubes = " << f1.numCubes << endl;
+	//cout << "numCubes = " << f1.numCubes << endl;
 	
 	for (int c = 0; c < f1.numCubes; c++) 
 	{
@@ -49,15 +194,15 @@ void divide (func f1, string divisor)
 		
 		pos = cur_cube.find(divisor);
 		
-		if (pos != string::npos) {
+		if (pos != -1) {
 			// found
-			cout << "Found at position " << pos << endl;
-			cout << "Before: " << cur_cube << endl;
+			//cout << "Found at position " << pos << endl;
+			//cout << "Before: " << cur_cube << endl;
 			
 			cur_cube.replace(pos, 1, "");
 			track++;
 			
-			cout << "After: " << cur_cube << endl;
+			//cout << "After: " << cur_cube << endl;
 		}
 		else {
 			cout << "Not found" << endl;
@@ -76,7 +221,6 @@ void divide (func f1, string divisor)
 	}
 
 }
-
 
 func readFunction(string in_line)
 {
@@ -146,7 +290,73 @@ func readFunction(string in_line)
 		
 	}
 	
+	
+	// get array of all variables
+	
+	string vars [26];
+	string temp;
+	int x = 0;
+	
+	for (int j = 0; j < numberOfCubes; j++) {
+		for (int k = 0; k < cur_func.cubes[j].length(); k++) {
+		
+			temp = cur_func.cubes[j][k]; 
+			
+			if (!isPresent(vars, temp)) {
+				// not found
+				vars[x] = cur_func.cubes[j][k];
+				x++;
+			}
+		}
+	}
+	
+	int numVars = x;
+	
+	string temp2;
+	int flag = 1; 
+	 int m = 0;
+	// n = 0;
+	
+	
+	while (flag == 1) {
+		flag = 0;
+		m = 0;
+		while (!vars[m].empty()) {
+
+			if (!vars[m+1].empty()) {
+				
+				if (vars[m] > vars[m+1])
+				{
+					temp2 = vars[m];
+					vars[m] = vars[m+1];
+					vars[m+1] = temp2;
+					flag = 1;
+				}
+				
+			}
+			
+			m++;
+		}
+		
+		
+		
+	}
+	
+	
+	/*
+	for (x = 0; x < numVars; x++) {
+		cout << vars[x] << endl;
+	}
+	*/
+	
 	cur_func.numCubes = nCubes;
+	cur_func.numVars = numVars;
+	
+	
+	for (i = 0; i < numVars; i++) {
+		cur_func.variables[i] = vars[i];
+	}
+	
 	
 	return cur_func;
     
@@ -167,24 +377,6 @@ void printCubes(func function)
 	
 }
 
-bool isPresent(string array[], string query)
-{
-	// returns true if query is found in array[]
-	
-	int i;
-	//cout << "Reached isPresent" << endl;
-	
-	while (!array[i].empty()) {
-		if (array[i] == query) {
-			// found
-			//cout << "Found!" << endl;
-			return true;
-		}
-		i++;
-	}
-//	cout << "Not Found." << endl;
-	return false;
-}
 
 void printAllCubes()
 {
@@ -218,6 +410,14 @@ void printAllCubes()
 		
 		
 	}
+	
+/*	str_array sortedArray = str_sort(printed);
+	int n = 0;
+	while (!sortedArray.data[n].empty()) {
+		printed[n] = sortedArray.data[n];
+		n++;
+	}
+	*/
 	
 	for (x = 0; x < k ; x++) {
 		cout << printed[x] << endl;
@@ -404,11 +604,15 @@ int main (int argc, char* argv[])
 	}
 	
 	cout << "Number of cubes: " << numberOfCubes << endl;
+	
+	
 	//func newFunc;
 	
-	divide(func_array[0], "b");
+	//divide(func_array[0], "b");
 	
-	//printAllCubes();
+	printAllCubes();
+	
+	//cout << "Length of array: " << lengthOfArray(func_array[2].cubes) << endl;
 	
 	//printKernelMatrix();
 	
