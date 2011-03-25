@@ -10,9 +10,9 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <xlocale.h>
 #include "types.h"
 #include <string.h>
+
 
 #define ARG_NUM 2 // number of arguments to expect
 
@@ -29,49 +29,65 @@ int numberOfVariables;
 func func_array[20]; // max 20 functions
 
 
+// TODO: print list of cubes (check for duplicates!)
+// TODO: print kernel-matrix table
 
-func readFunction(char *in_line)
+
+func readFunction(char * in_line)
 {
 	// parse each function
     
 	func cur_func;
 	int fid; // function id
 	
+	char line[strlen(in_line)+1];
+	memcpy(line, in_line, strlen(in_line) + 1);
+
 	char *str1;
 	
-	if (in_line[strlen(in_line) - 1] == '\n') {
-		in_line[strlen(in_line) - 1] = '\0';
+	// remove extra new line characters
+	if (line[strlen(line) - 1] == '\n') {
+		line[strlen(line) - 1] = '\0';
 	}
 	
 	
-	printf("Incoming string is: %s\n", in_line);
+	printf("Incoming string is: %s\n", line);
 
     int i = 0;
 	
-	if (in_line[0] != 'f') {
+	if (line[0] != 'f') {
 		printf("Error: Function must be in format fxx where xx is the function number.\n");
 		exit(1);
 	}
 	
-	if (in_line[2] == ' ') {
-		fid = (in_line[1] - 48);
-		//printf("fid = %d\n", fid);
+	if (line[2] == ' ') {
+		fid = (line[1] - 48);
+	
 	}
 	else {
-		fid = ((10 * (in_line[1] - 48)) + (in_line[2] - 48));
-		//printf("fid = %d\n", fid);
-		
+		fid = ((10 * (line[1] - 48)) + (line[2] - 48));
 	}
 
 	cur_func.fid = fid;
 	
-	str1 = strtok(in_line, " = ");
+	str1 = strtok(line, " = ");
 	str1 = strtok(NULL, " + "); 
 	
 	while (str1 != NULL) {
 		
 		str1 = strtok(NULL, " + ");
-		cur_func.cubes[i] = str1; // CAUSES SEGFAULT
+		printf("str1 = %s\n", str1);
+		
+		// TODO: Assigning cubes[i] to temp pointer that changes
+		// Need to allocate memory and store string
+		
+		if (str1 != NULL) {
+			cur_func.cubes[i] = malloc(strlen(line) + 1);
+			printf("Allocated size = %d\n", (strlen(line) + 1));
+			strcpy(cur_func.cubes[i], str1);
+		}
+
+		//cur_func.cubes[i] = str1;
 		i++;
 		
 	}
@@ -92,12 +108,7 @@ void printCubes(func function)
 		i++;
 	}
 	
-	
-	
 }
-
-
-
 
 
 
@@ -153,13 +164,24 @@ int main (int argc, char* argv[])
 		{
 			// processing the functions
 			
-			func myFunction;
+			// TODO: need check for .e (end of file)
+						
+			//printf("Storing at position j = %d\n", j);
+		//	printf("Line: %s\n", line);
 			
-			myFunction = readFunction(line);
+		//	printCubes(readFunction(line));
+		//	printf("After first print cube\n");
+		//	printf("Line: %s\n", line);
+
+			//printf( "lineA=%s\n", line );
+			func_array[j] = readFunction(line);
+		//	printf( "lineB=%s\n", line );
+			printCubes(func_array[j]);
 			
-			func_array[j] = myFunction; // store function in function array
+			
+		//	func_array[j] = myFunction; // store function in function array
 		
-			printCubes(myFunction);
+		//	printCubes(myFunction);
 			
 		//	int x = 0;
 			
@@ -172,7 +194,7 @@ int main (int argc, char* argv[])
 			//printf("Cube[0] of function is: %s\n", myFunction.cubes[0]);
 			//printf("Cube[1] of function is: %s\n", myFunction.cubes[1]);
 
-			printf("Function ID = %d\n", myFunction.fid);
+		//	printf("Function ID = %d\n", myFunction.fid);
 			
 		//	printf("Line Contents: %s\n", line);
 			
@@ -238,6 +260,13 @@ int main (int argc, char* argv[])
         count++;
     }
        
+	int m; //= 0;
+	for (m = 0; m < numberOfFunctions; m++) {
+		printCubes(func_array[m]);
+	}
     
+	// done reading file
+	
+	
  return 0;
 }
