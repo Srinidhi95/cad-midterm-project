@@ -55,7 +55,7 @@ bool isPresent(string array[], string query)
 
 int lengthOfArray(string array [])
 {
-	int i;
+	int i = 0;
 	while (!array[i].empty()) {
 		i++;
 	}
@@ -78,7 +78,7 @@ str_array str_sort(string array [])
 		i = 0;
 		while (!array[i].empty()) {
 			
-			cout << "Current cube: " << array[i] << endl;
+		//	cout << "Current cube: " << array[i] << endl;
 			
 			
 			if (!array[i+1].empty()) {
@@ -105,12 +105,12 @@ str_array str_sort(string array [])
 	int min_length = array[0].length();
 	int max_length = array[lengthOfArray(array) - 1].length();
 	
-	cout << "Min = " << min_length << " Max = " << max_length << endl;
+	//cout << "Min = " << min_length << " Max = " << max_length << endl;
 	j = 0;
 			
 		for (i = min_length; i <= max_length; i++) 
 		{
-			cout << "In second sort, flag = " << flag << endl;
+		//	cout << "In second sort, flag = " << flag << endl;
 			
 			flag = 1;
 			
@@ -122,15 +122,15 @@ str_array str_sort(string array [])
 				//j = 0;
 				if (!array[j+1].empty()) 
 				{
-					cout << "j=" << j << endl;
+					//cout << "j=" << j << endl;
 					
 					//printf("Array[%d].length = %d, %d", j, array[j].length(), array[j+1].length());
 					
-					cout << array[j] << " " << array[j+1] << endl;
+					//cout << array[j] << " " << array[j+1] << endl;
 					
 					if ((array[j].length() == array[j+1].length()) && (array[j] > array[j+1]))
 					{
-						cout << "Swapping" << endl;
+						//cout << "Swapping" << endl;
 						temp = array[i];
 						array[i] = array[i+1];
 						array[i+1] = temp;
@@ -178,48 +178,98 @@ str_array str_sort(string array [])
 	
 }
 
-void divide (func f1, string divisor)
+void divide (int index, int position)
 {
+	func f1 = func_array[index];
+	
+	cout << "Function ID: " << f1.fid << endl;
+	
+	
 	string cur_cube; 
 	int pos;			//position of divisor in cube
 	int track = 0;		//how many cubes the divisor is present in
-	
-	//cout << "numCubes = " << f1.numCubes << endl;
-	
-	for (int c = 0; c < f1.numCubes; c++) 
-	{
-		cur_cube = f1.cubes[c];
+						//will make use of variables
+	string divisor = f1.variables[position];
+																//cout << "numCubes = " << f1.numCubes << endl;
+		string kernelstor[10];
 		
-		cout << "Current Cube: " << cur_cube << endl;
-		
-		pos = cur_cube.find(divisor);
-		
-		if (pos != -1) {
-			// found
-			//cout << "Found at position " << pos << endl;
-			//cout << "Before: " << cur_cube << endl;
-			
-			cur_cube.replace(pos, 1, "");
-			track++;
-			
-			//cout << "After: " << cur_cube << endl;
-		}
-		else {
-			cout << "Not found" << endl;
-			cur_cube = "";
+		for (int j = 0; j < 10; j++) {
+			kernelstor[j] = f1.cubes[j];
 		}
 		
 		
+///////////////////THIS PART RETURNS A STRING ARRAY TEMP OF CUBES DIVISIBLE BY f1.vars[position] /////////////////////////		
+		int kt = 0;
+		string temp[10];
+		for (int c = 0; c < f1.numCubes; c++) 
+		{
+			cur_cube = kernelstor[c];
+			pos = cur_cube.find(divisor);	//finds divisor in cube
+			//cout << "Current Cube: " << cur_cube << endl;
+			if (pos != -1) {				//if divisor is in string
+				cur_cube.replace(pos, 1, "");
+				temp[kt] = cur_cube;
+				kt++;
+				//cout << "After: " << cur_cube << endl;
+			}
+		}
+	//cout << "Temp length: " << lengthOfArray(temp) << endl;
+	//for(int p=0;p<lengthOfArray(temp);p++){
+	//	cout << temp[p] << endl; 
+	//}
+		//return temp;
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
+//////////////// USING TEMP RESULTS: /////////////////////////////
 		
-	}
+		if (lengthOfArray(temp) < 2) {      //f1.vars[position] is present in less than one cube, set its temp cubes to NULL
+			temp[0] = "";
+		}
+		else {                              //f1.vars[position] is present in more than one cube, now check if any other variable is present in ALL
+			f1.cokernels[0] = f1.variables[position];      //add position as co-kernel of f1
+			f1.kernels[0] = temp[0];         //add first cube divided by f1.vars.position to the kernel of f1
+			for (int w=1; w<lengthOfArray(temp); w++) { //add the rest of the cubes to that kernel spot
+				f1.kernels[0] = f1.kernels[0] + " + " + temp[w];
+			}
+			
+			int location;
+			string current_cube;
+			
+			string ntemp[lengthOfArray(temp)+10];
+			int u = 0;
+			for (int e = position + 1; e<f1.numVars; e++) {  //concatenate through variables
+				for(int c = 0; c < lengthOfArray(temp); c++){ //concatenate through cubes for variable e and add each divisible cube to ntemp[]
+					current_cube = temp[c];
+					location = current_cube.find(f1.variables[e]);
+					if (location != -1) {				//if divisor is in string
+						current_cube.replace(location, 1, "");
+						ntemp[u] = current_cube;
+						u++;				
+					}
+				if (lengthOfArray(ntemp)==lengthOfArray(temp)) {	//all of kernel divisible by variable, add it to cokernel, replace kernel
+					f1.cokernels[0] = f1.cokernels[0] + f1.variables[e];
+					f1.kernels[0] = ntemp[0];
+					for (int w=1; w<lengthOfArray(temp); w++) { //add the rest of the cubes to that kernel spot
+						f1.kernels[0] = f1.kernels[0] + " + " + ntemp[w];
+					}
+							
+				}
+				else {
+					u = 0;
+					for (int z = 0; z < lengthOfArray(ntemp); z++)
+					{
+						ntemp[z] = "";
+					}
+				}
+					
+					
+			}
+		}
+		
+		}
 	
-	if (track < 2) {
-		// 
-	}
-	else {
-		//
-	}
-
+	func_array[index] = f1;
+		
+	
 }
 
 func readFunction(string in_line)
@@ -411,13 +461,15 @@ void printAllCubes()
 		
 	}
 	
-/*	str_array sortedArray = str_sort(printed);
+	// sort the array
+	
+	str_array sortedArray = str_sort(printed);
 	int n = 0;
 	while (!sortedArray.data[n].empty()) {
 		printed[n] = sortedArray.data[n];
 		n++;
 	}
-	*/
+
 	
 	for (x = 0; x < k ; x++) {
 		cout << printed[x] << endl;
@@ -435,7 +487,7 @@ void printKernelMatrix()
 	string divider = "---------";
 	
 	cout << "Kernels" << "\t\t" << "ID" << '\t' << "R\\C" << '\t' << endl;
-	cout << divider << divider << divider << divider << divider << endl;
+	
 	
 	
 	
@@ -608,9 +660,18 @@ int main (int argc, char* argv[])
 	
 	//func newFunc;
 	
-	//divide(func_array[0], "b");
+	cout << "Before: " << func_array[0].kernels[0] << endl;
 	
-	printAllCubes();
+	cout << "Variable = " << 	func_array[0].variables[0] << endl;
+	
+	divide(0, 0);
+	
+	cout << "After: " << func_array[0].kernels[0] << endl;
+	cout << "Cokernel: " << func_array[0].cokernels[0] << endl;
+		
+	
+	
+	//printAllCubes();
 	
 	//cout << "Length of array: " << lengthOfArray(func_array[2].cubes) << endl;
 	
