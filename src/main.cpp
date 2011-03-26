@@ -81,116 +81,93 @@ int lengthOfArray(string array [])
 	
 }
 
-str_array str_sort(string array [])
+str_array str_sort(string array[])
 {
-
-	string temp;
-	int flag = 1; 
+	// sort initially alphabetically
+	
+	string temp = "";
+	int flag = 1;
 	int i = 0;
 	int j = 0;
+	
+	int min_length = 26;
+	int max_length = 0;
+	
+	int counter = 0; // to store the length of the array
+	
+	
+	// WARNING: May segfault if array is full
+	while (!array[counter].empty()) {
+		counter++;
+	}
+	
+	string sorted[counter];
+	
+	// if flag = 1 then a swap was made
+	// keep looping until no swaps => array is sorted
 	
 	while (flag == 1) {
 		flag = 0;
 		i = 0;
-		while (!array[i].empty()) {
-			
-		//	cout << "Current cube: " << array[i] << endl;
-			
-			
-			if (!array[i+1].empty()) {
+		
+		while (!array[i].empty()) 
+		{
+			// check and swap if necessary
+			if (!array[i+1].empty()) // check if near bounds
+			{
+				// calculate the smallest and largest length
+				if (array[i].length() > max_length) {
+					max_length = array[i].length();
+				}
+				if (array[i].length() < min_length) {
+					min_length = array[i].length();
+				}
 				
-				if (array[i].length() > array[i+1].length())
-				{
+				if (array[i] > array[i+1]) {
+					// they need to be swapped
 					temp = array[i];
 					array[i] = array[i+1];
 					array[i+1] = temp;
-					flag = 1;
+					flag = 1; 
 				}
-			
 			}
-			
-			i++;
+			i++; // increment counter - move to next element
 		}
 		
 	}
 	
-	// sorted by length
+	// at this point the array is sorted alphabetically
 	
-	int min_length = array[0].length();
-	int max_length = array[lengthOfArray(array) - 1].length();
+	// now we sort by length
 	
-	//cout << "Min = " << min_length << " Max = " << max_length << endl;
-	j = 0;
-			
-		for (i = min_length; i <= max_length; i++) 
-		{
-		//	cout << "In second sort, flag = " << flag << endl;
-			
-			flag = 1;
-			
-			while (flag == 1)
-			{
-				// TODO: Fix sorting, j is not incremented correctly
-				
-				flag = 0;
-				//j = 0;
-				if (!array[j+1].empty()) 
-				{
-					//cout << "j=" << j << endl;
-					
-					//printf("Array[%d].length = %d, %d", j, array[j].length(), array[j+1].length());
-					
-					//cout << array[j] << " " << array[j+1] << endl;
-					
-					if ((array[j].length() == array[j+1].length()) && (array[j] > array[j+1]))
-					{
-						//cout << "Swapping" << endl;
-						temp = array[i];
-						array[i] = array[i+1];
-						array[i+1] = temp;
-						flag = 1;
-							j++;
-					}
-					
-				}
-								
-						}
-						
-					
+	int k = min_length;
+	int y = 0;
+	
+	while (k <= max_length) {
+		// for every length, loop through array and copy into new array
+		for (int x = 0; x < counter; x++) {
+			if (array[x].length() == k) {
+				sorted[y] = array[x];
+				y++;
+			}
 		}
 		
 		
-	
-	
-	
-	/*
-	 if ((array[i] > array[i+1]) and (array[i].length() >= array[i+1].length()))
-	 {
-	 cout << "Swapping" << endl;
-	 temp = array[i];
-	 array[i] = array[i+1];
-	 array[i+1] = temp;
-	 flag = 1;
-	 
-	 
-	 }
-	 */
-	
-	
-	
-	str_array toReturn;
-	j = 0;
-	
-	while (!array[j].empty()) {
-		toReturn.data[j] = array[j];
-		j++;
+		k++;
 	}
 	
-	return toReturn;
+	
+	str_array returnArray;
+	for (int z = 0; z < counter; z++) {
+		returnArray.data[z] = sorted[z];
+	}
+	
+	return returnArray;
+	
 	
 }
 
-void divide (int index, int position)
+void divide(int index, int position)
 {
 	// TODO: Fix bug where variables overlap
 	
@@ -459,9 +436,10 @@ void printCubes(func function)
 	
 }
 
-
 int printKernels(bool silent)
 {
+	// if silent is true then won't print to screen
+	
 	int k_count = 1;
 	
 	
@@ -485,6 +463,7 @@ int printKernels(bool silent)
 
 void findKernelCubes()
 {
+	
 	
 	string kcubes[100]; // better approx for size later?
 	string line;
@@ -536,28 +515,38 @@ void findKernelCubes()
 
 	int m = 0;
 	
+	// sort kcubes
+	
+	str_array sortedCubes;
+	
+	sortedCubes = str_sort(kcubes);
+	
+	
+	// store in kernelCubes
+	
+	// TODO: Remove Duplicates
+	
 	while (!kcubes[m].empty()) {
-		kernelCubes[m] = kcubes[m];
-		//cout << kcubes[m] << endl;
+		kernelCubes[m] = sortedCubes.data[m];
+		cout << kernelCubes[m] << endl;
 		m++;
 	}
 	
 	
 }
 
-
 void printAllCubes(bool silent)
 {
 	// prints all cubes
 	
-	// TODO: Sort cubes by alphabetical order
 	
 	int i;
 	int j;
 	int k = 0;
 	int x;
 	
-	string printed[numberOfCubes]; // array of printed cubes
+	string printed[numberOfCubes + 1]; // array of printed cubes
+	
 	
 	
 	for (i = 0; i < numberOfFunctions; i++) {
@@ -617,18 +606,18 @@ void createMatrix()
 	// number of columns = number of cubes
 	// number or rows = number of kernels
 	
-	int numOfKernels = printKernels(true);
+	int numOfKernels = printKernels(true); // returns number of kernels
 	int row = 0;
 	int col = 0;
 	
-	// write the first column
-	
+	// write the first column, 0 (R/C)
 	
 	for (int i = 1; i <= numOfKernels; i++) {
-		kernelmatrix[i][0] = intToString(i);
+		kernelmatrix[i][0] = intToString(i); 
 	}
 	
-	// write first row
+	// write first row 0, number of cubes
+	
 	for (int j = 1; j <= numberOfCubes; j++) {
 		kernelmatrix[0][j] = intToString(j);
 	}
@@ -726,7 +715,6 @@ void printKernelMatrix()
 	
 	
 }
-
 
 int main (int argc, char* argv[])
 {
@@ -890,21 +878,25 @@ int main (int argc, char* argv[])
 	
 
 	findAllKernels();
-	printKernels(true);
+	printKernels(false);
 
 	findKernelCubes();
 	
 	int n = 0;
 	while (!kernelCubes[n].empty()) {
-		//cout << kernelCubes[n] << endl;
+		
+	//	cout << "Kernel Cube (" << n << "): " << kernelCubes[n] << endl;
 		n++;
 	}
 	
-	//printAllCubes(true);
+//	cout << "Number of Kernel Cubes: " << n << endl;
 	
+	printAllCubes(true);
 	
-//	createMatrix();
-//	printKernelMatrix();
+	//findKernelCubes();
+	createMatrix();
+	
+	//printKernelMatrix();
 	
 	// done reading file
 	
