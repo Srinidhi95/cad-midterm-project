@@ -37,6 +37,8 @@ string kernelmatrix[100][100]; // to store kernel-cube matrix
 
 string allCubes[100];
 
+string kernelCubes[100]; // list of all kernel cubes
+
 
 string intToString(int number)
 {
@@ -458,6 +460,96 @@ void printCubes(func function)
 	
 }
 
+
+int printKernels(bool silent)
+{
+	int k_count = 1;
+	
+	
+	for (int i = 0; i < numberOfFunctions; i++) {
+		for (int j = 0; j < func_array[i].numKernels; j++) {
+			
+			if (!silent) {
+				cout << k_count << '\t' << func_array[i].fid << '\t' << func_array[i].kernels[j] << endl;
+			}
+			k_count++;
+		}
+	}
+	if (!silent) {
+		cout << "Total Number of Kernels: " << (k_count - 1) << endl;	
+	}
+	
+	return (k_count - 1);
+	
+	
+}
+
+void findKernelCubes()
+{
+	
+	string kcubes[100]; // better approx for size later?
+	string line;
+	
+	int numOfKernels = printKernels(true);
+	
+	
+	string krl[numOfKernels];// store all kernels locally
+	int fids[numOfKernels]; // store corresponding fids
+	
+	int count = 0;
+	
+	for (int x = 0; x < numberOfFunctions; x++) {
+		for (int y = 0; y < func_array[x].numKernels; y++) {
+			krl[count] = func_array[x].kernels[y]; 
+			fids[count] = func_array[x].fid;
+			count++;
+		}
+	}
+
+	
+	// TOKENIZE
+	char *str1;
+	char *cstr;
+	int k_count = 0;
+	
+	for (int i = 0; i < numOfKernels; i++) {
+		// parse each kernel
+		line = krl[i];
+		
+		cstr = new char[line.size() + 1];
+		strcpy (cstr, line.c_str());
+		str1 = strtok(cstr, " + ");
+		kcubes[k_count] = str1; // add the first string
+		k_count++;
+		
+		//cout << "first str = " << str1 << endl;
+		while (str1 != NULL) {
+			str1 = strtok(NULL, " + ");
+			if (str1 != NULL) {
+				kcubes[k_count] = str1;
+				k_count++;
+			
+			}
+			
+		}
+		
+	}
+
+	int m = 0;
+	
+	while (!kcubes[m].empty()) {
+		kernelCubes[m] = kcubes[m];
+		//cout << kcubes[m] << endl;
+		m++;
+	}
+	
+	
+}
+
+
+
+
+
 void printAllCubes(bool silent)
 {
 	// prints all cubes
@@ -525,32 +617,6 @@ void findAllKernels()
 	
 }
 
-
-int printKernels(bool silent)
-{
-	int k_count = 1;
-	
-	
-	for (int i = 0; i < numberOfFunctions; i++) {
-		for (int j = 0; j < func_array[i].numKernels; j++) {
-			
-			if (!silent) {
-				cout << k_count << '\t' << func_array[i].fid << '\t' << func_array[i].kernels[j] << endl;
-			}
-			k_count++;
-		}
-	}
-	if (!silent) {
-	cout << "Total Number of Kernels: " << (k_count - 1) << endl;	
-	}
-	
-	return (k_count - 1);
-	
-	
-}
-
-// TODO: Create kernel-matrix table
-
 void createMatrix()
 {
 	// number of columns = number of cubes
@@ -561,7 +627,6 @@ void createMatrix()
 	int col = 0;
 	
 	// write the first column
-	
 	
 	
 	for (int i = 1; i <= numOfKernels; i++) {
@@ -830,13 +895,21 @@ int main (int argc, char* argv[])
 	
 
 	findAllKernels();
+	printKernels(false);
+
+	findKernelCubes();
 	
-		printAllCubes(true);
+	int n = 0;
+	while (!kernelCubes[n].empty()) {
+		cout << kernelCubes[n] << endl;
+		n++;
+	}
 	
-	//cout << "Length of array: " << lengthOfArray(func_array[2].cubes) << endl;
+	//printAllCubes(true);
 	
-	createMatrix();
-	printKernelMatrix();
+	
+//	createMatrix();
+//	printKernelMatrix();
 	
 	// done reading file
 	
