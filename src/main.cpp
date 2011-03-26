@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include "types.h"
+#include <cstdio>
 
 
 #include <iostream>
