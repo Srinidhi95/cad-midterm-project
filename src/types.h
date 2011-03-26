@@ -7,34 +7,13 @@
 using namespace std;
 
 
-/*
-class func {
-public:
-	
-	int fid;
-	int numVars;
-	int numCubes;
-	
-	string kernels[];
-	string cokernels[];
-	string cubes[];
-	
-	
-};
-
-
-*/
-
-
-
 typedef struct
 {
 	
 	int fid;
 	int numCubes;
 	int numVars;
-
-	// for C++ implementation
+	int numKernels;
 	
 	string kernels[26];
 	string cokernels[26];

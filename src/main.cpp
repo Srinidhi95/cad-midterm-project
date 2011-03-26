@@ -32,6 +32,11 @@ int numberOfCubes;
 // declare array of functions
 func func_array[20]; // max 20 functions
 
+string kernelmatrix[100][100]; // to store kernel-cube matrix
+
+string allCubes[100];
+
+
 
 bool isPresent(string array[], string query)
 {
@@ -52,7 +57,6 @@ bool isPresent(string array[], string query)
 	return false;
 }
 
-
 int lengthOfArray(string array [])
 {
 	int i = 0;
@@ -63,7 +67,6 @@ int lengthOfArray(string array [])
 	return i;
 	
 }
-
 
 str_array str_sort(string array [])
 {
@@ -172,19 +175,21 @@ str_array str_sort(string array [])
 		j++;
 	}
 	
-	//toReturn.data = array;
-	
 	return toReturn;
 	
 }
 
 void divide (int index, int position)
 {
+	// TODO: Fix bug where variables overlap
+	
 	func f1 = func_array[index];
 	
-	cout << "Function ID: " << f1.fid << endl;
+	//cout << "Function ID: " << f1.fid << endl;
 	
 	
+	
+	int fk = f1.numKernels;
 	string cur_cube; 
 	int pos;			//position of divisor in cube
 	int track = 0;		//how many cubes the divisor is present in
@@ -225,10 +230,11 @@ void divide (int index, int position)
 			temp[0] = "";
 		}
 		else {                              //f1.vars[position] is present in more than one cube, now check if any other variable is present in ALL
-			f1.cokernels[0] = f1.variables[position];      //add position as co-kernel of f1
-			f1.kernels[0] = temp[0];         //add first cube divided by f1.vars.position to the kernel of f1
+			f1.numKernels++;
+			f1.cokernels[fk] = f1.variables[position];      //add position as co-kernel of f1
+			f1.kernels[fk] = temp[0];         //add first cube divided by f1.vars.position to the kernel of f1
 			for (int w=1; w<lengthOfArray(temp); w++) { //add the rest of the cubes to that kernel spot
-				f1.kernels[0] = f1.kernels[0] + " + " + temp[w];
+				f1.kernels[fk] = f1.kernels[fk] + " + " + temp[w];
 			}
 			
 			int location;
@@ -253,10 +259,10 @@ void divide (int index, int position)
 				//	cout << ntemp[p] << endl;}
 				
 				if (lengthOfArray(ntemp)==lengthOfArray(temp)) {	//all of kernel divisible by variable, add it to cokernel, replace kernel
-					f1.cokernels[0] = f1.cokernels[0] + f1.variables[e];
-					f1.kernels[0] = ntemp[0];
+					f1.cokernels[fk] = f1.cokernels[fk] + f1.variables[e];
+					f1.kernels[fk] = ntemp[0];
 					for (int w=1; w<lengthOfArray(ntemp); w++) { //add the rest of the cubes to that kernel spot
-						f1.kernels[0] = f1.kernels[0] + " + " + ntemp[w];
+						f1.kernels[fk] = f1.kernels[fk] + " + " + ntemp[w];
 					}
 					
 					u = 0;
@@ -415,6 +421,7 @@ func readFunction(string in_line)
 	
 	cur_func.numCubes = nCubes;
 	cur_func.numVars = numVars;
+	cur_func.numKernels = 0; // initialize to 0
 	
 	
 	for (i = 0; i < numVars; i++) {
@@ -441,8 +448,7 @@ void printCubes(func function)
 	
 }
 
-
-void printAllCubes()
+void printAllCubes(bool silent)
 {
 	// prints all cubes
 	
@@ -486,21 +492,123 @@ void printAllCubes()
 
 	
 	for (x = 0; x < k ; x++) {
-		cout << printed[x] << endl;
+		allCubes[x] = printed[x];
+		if (!silent) {
+		cout << printed[x] << endl;	
+		}
+		
+	}
+	
+	
+	
+}
+
+void findAllKernels()
+{
+	// call divide() for each variable in each kernel
+	
+	for (int i = 0; i < numberOfFunctions; i++) {
+		for (int j = 0; j < func_array[i].numVars ; j++) {
+			divide(i, j);
+		}
 	}
 	
 }
 
-// TODO: print kernel-matrix table
+
+int printKernels(bool silent)
+{
+	int k_count = 1;
+	
+	
+	for (int i = 0; i < numberOfFunctions; i++) {
+		for (int j = 0; j < func_array[i].numKernels; j++) {
+			
+			if (!silent) {
+				cout << k_count << '\t' << func_array[i].fid << '\t' << func_array[i].kernels[j] << endl;
+			}
+			k_count++;
+		}
+	}
+	if (!silent) {
+	cout << "Total Number of Kernels: " << (k_count - 1) << endl;	
+	}
+	
+	return k_count;
+	
+	
+}
+
+// TODO: Create kernel-matrix table
+
+void createMatrix()
+{
+	// number of columns = number of cubes
+	// number or rows = number of kernels
+	
+	int numOfKernels = printKernels(true);
+	int row = 0;
+	int col = 0;
+	
+	for (row = 0; row < numOfKernels; row++) { 
+		for (col = 0; col < numberOfCubes; col++) {
+			kernelmatrix[row][0] = row;
+			cout << "km = " << kernelmatrix[row][0] << endl;
+		}
+	}
+
+
+	
+	
+}
 
 void printKernelMatrix()
 {
 	// first line is unique cubes - 4 tabs
 	// second line is header - 0 tabs
 	// third line is seperator - 0 tabs (use string n times where n = number of unique cubes + 4)
+	
 	string divider = "---------";
 	
-	cout << "Kernels" << "\t\t" << "ID" << '\t' << "R\\C" << '\t' << endl;
+	//int numOfKernels = printKernels(true);
+	
+	// print cubes of all functions
+
+	cout << "\t\t\t\t";
+	for (int i = 0; i < numberOfCubes; i++) {
+		cout << allCubes[i] << '\t';
+	}
+	cout << endl;
+	cout << "Kernels" << "\t\t" << "ID" << '\t' << "R\\C" << '\t';
+	for (int j = 1; j <= numberOfCubes; j++) {
+		cout << j << '\t';
+	}
+	cout << endl;
+	
+	for (int div1 = 0; div1 < numberOfCubes + 2; div1++) {
+		cout << divider;
+	}
+	cout << endl;
+	for (int x = 0; x < numberOfFunctions; x++) {
+		for (int y = 0; y < func_array[x].numKernels; y++) {
+			cout << func_array[x].kernels[y] << "\t\t" << func_array[x].fid << '\t';
+			for (int z = 0; z < numberOfCubes; z++) {
+				// print matrix
+				//cout << "z,y = " << z << ", " << y << endl;
+				//cout << "k-matrix: " <<  kernelmatrix[z][0] << endl;
+				cout << kernelmatrix[z][y] << '\t';
+				
+			}
+			cout << endl;
+		}
+	}
+	for (int div2 = 0; div2 < numberOfCubes + 2; div2++) {
+		cout << divider;
+	}
+	cout << endl;
+	
+	
+	
 	
 	
 	
@@ -540,8 +648,7 @@ int main (int argc, char* argv[])
     }
     
     char cline[80]; // to store the line
-	//string line;
-    
+
     int count;
     count = 1;
 	
@@ -550,9 +657,6 @@ int main (int argc, char* argv[])
     
     while (fgets(cline, 80, fp) != NULL && DONE_FLAG == 0)
     {
-		// read in the file one line at a time
-		// 1st line is number of local functions
-		// 2nd line is number of variables
 		
 		string line(cline); // creates a c++ string from the cstring returned by fgets
 		
@@ -672,24 +776,15 @@ int main (int argc, char* argv[])
 	cout << "Number of cubes: " << numberOfCubes << endl;
 	
 	
-	//func newFunc;
+
+	findAllKernels();
 	
-	cout << "Before: " << func_array[0].kernels[0] << endl;
-	
-	cout << "Variable = " << 	func_array[0].variables[0] << endl;
-	
-	divide(0, 0);
-	
-	cout << "After: " << func_array[0].kernels[0] << endl;
-	cout << "Cokernel: " << func_array[0].cokernels[0] << endl;
-		
-	
-	
-	//printAllCubes();
+		printAllCubes(true);
 	
 	//cout << "Length of array: " << lengthOfArray(func_array[2].cubes) << endl;
 	
-	//printKernelMatrix();
+	createMatrix();
+	printKernelMatrix();
 	
 	// done reading file
 	
