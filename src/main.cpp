@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -36,6 +37,15 @@ string kernelmatrix[100][100]; // to store kernel-cube matrix
 
 string allCubes[100];
 
+
+string intToString(int number)
+{
+	string str;
+	stringstream stream;
+	stream << number;
+	str = stream.str();
+	return str;
+}
 
 
 bool isPresent(string array[], string query)
@@ -552,8 +562,8 @@ void createMatrix()
 	
 	for (row = 0; row < numOfKernels; row++) { 
 		for (col = 0; col < numberOfCubes; col++) {
-			kernelmatrix[row][0] = row;
-			cout << "km = " << kernelmatrix[row][0] << endl;
+			//kernelmatrix[row][0] = intToString(row);
+			// TODO: indices are wrong!
 		}
 	}
 
