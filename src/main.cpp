@@ -236,7 +236,9 @@ void divide (int index, int position)
 			
 			string ntemp[lengthOfArray(temp)+10];
 			int u = 0;
+			
 			for (int e = position + 1; e<f1.numVars; e++) {  //concatenate through variables
+				u = 0;
 				for(int c = 0; c < lengthOfArray(temp); c++){ //concatenate through cubes for variable e and add each divisible cube to ntemp[]
 					current_cube = temp[c];
 					location = current_cube.find(f1.variables[e]);
@@ -245,13 +247,25 @@ void divide (int index, int position)
 						ntemp[u] = current_cube;
 						u++;				
 					}
+				}
+				//cout << "Length of ntemp: " << lengthOfArray(ntemp) << " variable: " << f1.variables[e] << endl;
+				//for(int p=0;p<lengthOfArray(ntemp);p++){
+				//	cout << ntemp[p] << endl;}
+				
 				if (lengthOfArray(ntemp)==lengthOfArray(temp)) {	//all of kernel divisible by variable, add it to cokernel, replace kernel
 					f1.cokernels[0] = f1.cokernels[0] + f1.variables[e];
 					f1.kernels[0] = ntemp[0];
-					for (int w=1; w<lengthOfArray(temp); w++) { //add the rest of the cubes to that kernel spot
+					for (int w=1; w<lengthOfArray(ntemp); w++) { //add the rest of the cubes to that kernel spot
 						f1.kernels[0] = f1.kernels[0] + " + " + ntemp[w];
 					}
-							
+					
+					u = 0;
+					//cout << "About to reset ntemp" << endl;
+						for (int z = 0; z < lengthOfArray(temp) + 10; z++)
+						{
+					//		cout << "reset: " << ntemp[z] << endl;
+							ntemp[z] = "";
+						}		
 				}
 				else {
 					u = 0;
@@ -262,7 +276,7 @@ void divide (int index, int position)
 				}
 					
 					
-			}
+			
 		}
 		
 		}
