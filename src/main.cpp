@@ -587,7 +587,7 @@ void printKernelMatrix()
 {
 	// first line is unique cubes - 4 tabs
 	// second line is header - 0 tabs
-	// third line is seperator - 0 tabs (use string n times where n = number of unique cubes + 4)
+	// third line is seperator - 0 tabs (use divider n times where n = number of unique cubes + 2)
 	
 	string divider = "---------";
 	
@@ -638,6 +638,13 @@ void printKernelMatrix()
 			cout << krl[k_count] << '\t' << fids[k_count] << '\t';
 		}
 
+		// print out corresponding row in the kernel matrix
+		
+		for (int a = 1; a <= numberOfCubes; a++) {
+			cout << kernelmatrix[k_count + 1][a] << '\t';
+		}
+		
+		
 		k_count++;
 		cout << endl;
 		
