@@ -55,7 +55,7 @@ bool isPresent(string array[], string query)
 {
 	// returns true if query is found in array[]
 	
-	int i;
+	int i = 0;
 	//cout << "Reached isPresent" << endl;
 	
 	while (!array[i].empty()) {
