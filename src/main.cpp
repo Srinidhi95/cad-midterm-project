@@ -544,7 +544,7 @@ int printKernels(bool silent)
 	cout << "Total Number of Kernels: " << (k_count - 1) << endl;	
 	}
 	
-	return k_count;
+	return (k_count - 1);
 	
 	
 }
@@ -560,9 +560,20 @@ void createMatrix()
 	int row = 0;
 	int col = 0;
 	
+	// write the first column
+	
+	for (int i = 1; i <= numOfKernels; i++) {
+		kernelmatrix[i][0] = intToString(i);
+	}
+	
+	// write first row
+	for (int j = 1; j <= numberOfCubes; j++) {
+		kernelmatrix[0][j] = intToString(j);
+	}
+	
 	for (row = 0; row < numOfKernels; row++) { 
 		for (col = 0; col < numberOfCubes; col++) {
-			//kernelmatrix[row][0] = intToString(row);
+		//	kernelmatrix[row][0] = intToString(row);
 			// TODO: indices are wrong!
 		}
 	}
@@ -599,19 +610,40 @@ void printKernelMatrix()
 		cout << divider;
 	}
 	cout << endl;
+	
+	int numOfKernels = printKernels(true);
+	
+	
+	string krl[numOfKernels];// store all kernels locally
+	int fids[numOfKernels]; // store corresponding fids
+	
+	int count = 0;
+	
 	for (int x = 0; x < numberOfFunctions; x++) {
 		for (int y = 0; y < func_array[x].numKernels; y++) {
-			cout << func_array[x].kernels[y] << "\t\t" << func_array[x].fid << '\t';
-			for (int z = 0; z < numberOfCubes; z++) {
-				// print matrix
-				//cout << "z,y = " << z << ", " << y << endl;
-				//cout << "k-matrix: " <<  kernelmatrix[z][0] << endl;
-				cout << kernelmatrix[z][y] << '\t';
-				
-			}
-			cout << endl;
+			krl[count] = func_array[x].kernels[y]; 
+			fids[count] = func_array[x].fid;
+			count++;
 		}
 	}
+	
+	int k_count = 0;
+	
+	while (k_count < numOfKernels) 
+	{
+		if (k_count == 0) {
+		cout << krl[k_count] << "\t\t" << fids[k_count] << '\t';	
+		}
+		else {
+			cout << krl[k_count] << '\t' << fids[k_count] << '\t';
+		}
+
+		k_count++;
+		cout << endl;
+		
+	}
+	
+	
 	for (int div2 = 0; div2 < numberOfCubes + 2; div2++) {
 		cout << divider;
 	}
