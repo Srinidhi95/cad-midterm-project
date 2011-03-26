@@ -562,6 +562,8 @@ void createMatrix()
 	
 	// write the first column
 	
+	
+	
 	for (int i = 1; i <= numOfKernels; i++) {
 		kernelmatrix[i][0] = intToString(i);
 	}
@@ -578,6 +580,7 @@ void createMatrix()
 		}
 	}
 
+//cout << "Kernel Matrix: " << kernelmatrix[1][0] << endl;
 
 	
 	
@@ -640,7 +643,7 @@ void printKernelMatrix()
 
 		// print out corresponding row in the kernel matrix
 		
-		for (int a = 1; a <= numberOfCubes; a++) {
+		for (int a = 0; a < numberOfCubes; a++) {
 			cout << kernelmatrix[k_count + 1][a] << '\t';
 		}
 		
