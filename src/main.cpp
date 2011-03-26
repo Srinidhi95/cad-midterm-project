@@ -49,7 +49,6 @@ string intToString(int number)
 	return str;
 }
 
-
 bool isPresent(string array[], string query)
 {
 	// returns true if query is found in array[]
@@ -110,8 +109,6 @@ str_array str_sort(string array [])
 			
 			i++;
 		}
-		
-
 		
 	}
 	
@@ -547,14 +544,10 @@ void findKernelCubes()
 }
 
 
-
-
-
 void printAllCubes(bool silent)
 {
 	// prints all cubes
 	
-	// TODO: Return string array as well - perhaps with silent option?
 	// TODO: Sort cubes by alphabetical order
 	
 	int i;
@@ -641,7 +634,7 @@ void createMatrix()
 	for (row = 0; row < numOfKernels; row++) { 
 		for (col = 0; col < numberOfCubes; col++) {
 		//	kernelmatrix[row][0] = intToString(row);
-			// TODO: indices are wrong!
+			// TODO: Print rest of matrix
 		}
 	}
 
@@ -895,13 +888,13 @@ int main (int argc, char* argv[])
 	
 
 	findAllKernels();
-	printKernels(false);
+	printKernels(true);
 
 	findKernelCubes();
 	
 	int n = 0;
 	while (!kernelCubes[n].empty()) {
-		cout << kernelCubes[n] << endl;
+		//cout << kernelCubes[n] << endl;
 		n++;
 	}
 	
