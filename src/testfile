@@ -1,9 +1,8 @@
 .3
-.16
+.8
 
-f1 = ace + bce + de + g
-f2 = abc + abe + abi + kl
-f3 = cae + dg + k
+f1 = acg + bg + cd + fg 
+f2 = ac + b + e + f
+f3 = abc + bf + h
 
 .e
-
