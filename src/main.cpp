@@ -31,6 +31,8 @@ int numberOfFunctions;
 int numberOfVariables;
 int numberOfCubes;
 
+int numKernelCubes; // number of unique cubes present in the list of kernels
+
 
 // declare array of functions
 func func_array[20]; // max 20 functions
@@ -540,6 +542,8 @@ void findKernelCubes()
 	}
 	
 	
+	numKernelCubes = m; // set the number of unique kernel cubes;
+	
 }
 
 void printAllCubes(bool silent)
@@ -617,6 +621,27 @@ void createMatrix()
 	int row = 0;
 	int col = 0;
 	
+	int found = 0; 
+	
+	string krl[numOfKernels + 1];// store all kernels locally
+	
+	//string tempkcube; // to hold kernel cube when calling find()
+	
+	char *str1;
+	char *cstr;
+	string line;
+	
+	int count = 0;
+	
+	for (int x = 0; x < numberOfFunctions; x++) {
+		for (int y = 0; y < func_array[x].numKernels; y++) {
+			krl[count] = func_array[x].kernels[y]; 
+			count++;
+		}
+	}
+	
+	
+	
 	// write the first column, 0 (R/C)
 	
 	for (int i = 1; i <= numOfKernels; i++) {
@@ -629,18 +654,72 @@ void createMatrix()
 		kernelmatrix[0][j] = intToString(j);
 	}
 	
-	for (row = 0; row < numOfKernels; row++) { 
-		for (col = 0; col < numberOfCubes; col++) {
+	for (row = 1; row <= numOfKernels; row++) { 
+		for (col = 1; col <= numKernelCubes; col++) {
 		//	kernelmatrix[row][0] = intToString(row);
 			// TODO: Print rest of matrix
+			
+			// check if kernel cube at col is present in kernel at row
+		
+			line = krl[row - 1];
+			found = 0;
+				
+			cstr = new char[line.size() + 1];
+			strcpy (cstr, line.c_str());
+			str1 = strtok(cstr, " + ");
+			if (str1 == kernelCubes[col - 1]) {
+				// found a match
+				found = 1;
+						
+				}
+		
+			if (found == 0) {
+				while (str1 != NULL) {
+					str1 = strtok(NULL, " + ");
+					if (str1 != NULL) {
+						if (str1 == kernelCubes[col - 1]) {
+							// found a match
+							found = 1;
+						}
+						
+						
+					}
+					
+				}
+			}
+				
+				
+			
+			
+			
+			
+			
+			
+			//tempkcube = kernelCubes[col - 1];
+			//tempkcube = tempkcube + " ";
+			
+			//found = krl[row - 1].find(tempkcube);
+			
+			if (found == 1) {
+				// found a match
+				kernelmatrix[row][col] = '1';
+				//cout << "Found, krl = " << krl[row - 1] << " , cube = " << kernelCubes[col - 1] << endl;
+			}
+			else {
+				kernelmatrix[row][col] = '0';
+				//cout << "Not found, krl = " << krl[row - 1] << " , cube = " << kernelCubes[col - 1] << endl;
+			}
+			
+			// kernelmatrix[row][col] = intToString(col);
 		}
 	}
 
-//cout << "Kernel Matrix: " << kernelmatrix[1][0] << endl;
 
 	
 	
 }
+
+
 
 void printKernelMatrix()
 {
@@ -655,17 +734,17 @@ void printKernelMatrix()
 	// print cubes of all functions
 
 	cout << "\t\t\t\t";
-	for (int i = 0; i < numberOfCubes; i++) {
-		cout << allCubes[i] << '\t';
+	for (int i = 0; i < numKernelCubes; i++) {
+		cout << kernelCubes[i] << '\t';
 	}
 	cout << endl;
 	cout << "Kernels" << "\t\t" << "ID" << '\t' << "R\\C" << '\t';
-	for (int j = 1; j <= numberOfCubes; j++) {
+	for (int j = 1; j <= numKernelCubes; j++) {
 		cout << j << '\t';
 	}
 	cout << endl;
 	
-	for (int div1 = 0; div1 < numberOfCubes + 2; div1++) {
+	for (int div1 = 0; div1 < numKernelCubes + 2; div1++) {
 		cout << divider;
 	}
 	cout << endl;
@@ -673,8 +752,8 @@ void printKernelMatrix()
 	int numOfKernels = printKernels(true);
 	
 	
-	string krl[numOfKernels];// store all kernels locally
-	int fids[numOfKernels]; // store corresponding fids
+	string krl[numOfKernels]; // store all kernels locally
+	int fids[numOfKernels];   // store corresponding fids
 	
 	int count = 0;
 	
@@ -699,7 +778,7 @@ void printKernelMatrix()
 
 		// print out corresponding row in the kernel matrix
 		
-		for (int a = 0; a < numberOfCubes; a++) {
+		for (int a = 0; a <= numKernelCubes; a++) {
 			cout << kernelmatrix[k_count + 1][a] << '\t';
 		}
 		
@@ -710,16 +789,11 @@ void printKernelMatrix()
 	}
 	
 	
-	for (int div2 = 0; div2 < numberOfCubes + 2; div2++) {
+	for (int div2 = 0; div2 < numKernelCubes + 2; div2++) {
 		cout << divider;
 	}
 	cout << endl;
-	
-	
-	
-	
-	
-	
+
 	
 }
 
@@ -903,7 +977,7 @@ int main (int argc, char* argv[])
 	//findKernelCubes();
 	createMatrix();
 	
-	//printKernelMatrix();
+	printKernelMatrix();
 	
 	// done reading file
 	
