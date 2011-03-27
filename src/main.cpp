@@ -497,15 +497,24 @@ void findKernelCubes()
 		cstr = new char[line.size() + 1];
 		strcpy (cstr, line.c_str());
 		str1 = strtok(cstr, " + ");
-		kcubes[k_count] = str1; // add the first string
-		k_count++;
+		
+		if (!isPresent(kcubes, str1)) {
+			// not found - add it to array
+			kcubes[k_count] = str1;
+			k_count++;
+		}
+		
 		
 		//cout << "first str = " << str1 << endl;
 		while (str1 != NULL) {
 			str1 = strtok(NULL, " + ");
 			if (str1 != NULL) {
-				kcubes[k_count] = str1;
-				k_count++;
+				if (!isPresent(kcubes, str1)) {
+					// not found - add it to array
+					kcubes[k_count] = str1;
+					k_count++;
+				}
+				
 			
 			}
 			
@@ -523,8 +532,6 @@ void findKernelCubes()
 	
 	
 	// store in kernelCubes
-	
-	// TODO: Remove Duplicates
 	
 	while (!kcubes[m].empty()) {
 		kernelCubes[m] = sortedCubes.data[m];
