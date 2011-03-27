@@ -744,7 +744,7 @@ void printKernelMatrix()
 	}
 	cout << endl;
 	
-	for (int div1 = 0; div1 < numKernelCubes + 2; div1++) {
+	for (int div1 = 0; div1 < numKernelCubes + 3; div1++) {
 		cout << divider;
 	}
 	cout << endl;
@@ -769,7 +769,7 @@ void printKernelMatrix()
 	
 	while (k_count < numOfKernels) 
 	{
-		if (k_count == 0) {
+		if (krl[k_count].length() < 8) {
 		cout << krl[k_count] << "\t\t" << fids[k_count] << '\t';	
 		}
 		else {
@@ -789,7 +789,7 @@ void printKernelMatrix()
 	}
 	
 	
-	for (int div2 = 0; div2 < numKernelCubes + 2; div2++) {
+	for (int div2 = 0; div2 < numKernelCubes + 3; div2++) {
 		cout << divider;
 	}
 	cout << endl;
