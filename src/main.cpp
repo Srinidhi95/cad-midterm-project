@@ -173,8 +173,7 @@ str_array str_sort(string array[])
 	
 }
 
-////////////////////////////^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^WORK!!!!^^^^^^^/////////////////////////////
-bool kernelfind(string cubes[],  int position, int index) /////////
+bool kernelfind(string cubes[],  int position, int index) 
 {
 	int functindex = index;
 	//func func_array[index] = func_array[index];
@@ -186,11 +185,11 @@ bool kernelfind(string cubes[],  int position, int index) /////////
 
 	//cout << "Recurred" << endl;
 	//cout << "Length of cubes: " << lengthOfArray(cubes) << endl;
-	for(int l=0; l<lengthOfArray(cubes); l++)
+	/*for(int l=0; l<lengthOfArray(cubes); l++)
 			{
 				cout << cubes[l] << endl;
 			}
-	
+	*/
 	//cout << "BBBBBBB ->>>>>> Cubes at: " << func_array[index].numKernels << "  " << func_array[index].kernels[0] << endl;
 	
 ////CASE 1	
@@ -843,7 +842,7 @@ void findAllKernels()
 		
 		if(func_array[i].numKernels!=0)
 		{
-			cout << "HIT" << endl;
+		//	cout << "HIT" << endl;
 			func_array[i].numKernels--;
 		}
 			
@@ -856,7 +855,7 @@ void findAllKernels()
 	{
 		for(int b = 0; b<10; b++)
 			{
-				cout << "Kernel in spot " << b << " is:   " << func_array[i].kernels[b] << "   co-kernel:   " << func_array[i].cokernels[b] << endl;
+				//cout << "Kernel in spot " << b << " is:   " << func_array[i].kernels[b] << "   co-kernel:   " << func_array[i].cokernels[b] << endl;
 			}
 	}
 	
@@ -897,7 +896,7 @@ void createMatrix()
 	
 	// write first row 0, number of cubes
 	
-	for (int j = 1; j <= numberOfCubes; j++) {
+	for (int j = 1; j <= numKernelCubes; j++) {
 		kernelmatrix[0][j] = intToString(j);
 	}
 	
@@ -956,24 +955,24 @@ void printKernelMatrix()
 	// second line is header - 0 tabs
 	// third line is seperator - 0 tabs (use divider n times where n = number of unique cubes + 2)
 	
-	string divider = "---------";
+	string divider = "----------";
 	
 	//int numOfKernels = printKernels(true);
 	
 	// print cubes of all functions
 
-	outStream << "\t\t\t\t";
+	outStream << "\t\t\t\t\t\t\t";
 	for (int i = 0; i < numKernelCubes; i++) {
 		outStream << kernelCubes[i] << '\t';
 	}
 	outStream << endl;
-	outStream << "Kernels" << "\t\t" << "ID" << '\t' << "R\\C" << '\t';
+	outStream << "Kernels" << "\t\t\t\t\t" << "ID" << '\t' << "R\\C" << '\t';
 	for (int j = 1; j <= numKernelCubes; j++) {
 		outStream << j << '\t';
 	}
 	outStream << endl;
 	
-	for (int div1 = 0; div1 < numKernelCubes + 3; div1++) {
+	for (int div1 = 0; div1 < numKernelCubes + 2; div1++) {
 		outStream << divider;
 	}
 	outStream << endl;
@@ -999,10 +998,14 @@ void printKernelMatrix()
 	while (k_count < numOfKernels) 
 	{
 		if (krl[k_count].length() < 8) {
-		outStream << krl[k_count] << "\t\t" << fids[k_count] << '\t';	
+			outStream << krl[k_count] << "\t\t\t\t\t" << fids[k_count] << '\t';
 		}
-		else {
-			outStream << krl[k_count] << '\t' << fids[k_count] << '\t';
+		
+		if (krl[k_count].length() >= 8 && krl[k_count].length() < 15) {
+		outStream << krl[k_count] << "\t\t\t\t" << fids[k_count] << '\t';	
+		}
+		else if (krl[k_count].length() >= 15) {
+			outStream << krl[k_count] << "\t\t\t" << fids[k_count] << '\t';
 		}
 
 		// print out corresponding row in the kernel matrix
@@ -1018,7 +1021,7 @@ void printKernelMatrix()
 	}
 	
 	
-	for (int div2 = 0; div2 < numKernelCubes + 3; div2++) {
+	for (int div2 = 0; div2 < numKernelCubes + 2; div2++) {
 		outStream << divider;
 	}
 	outStream << endl;
@@ -1028,7 +1031,80 @@ void printKernelMatrix()
 
 void computePrimeRec()
 {
+	// loop through the kernelMatrix and find the column with the most ones
 	
+	int numKernels = printKernels(true); // returns the number of kernels = # of rows
+	
+	int numofOnes[numKernelCubes + 2]; // an array to hold the number of ones
+	
+	string rowlocations[numKernelCubes + 2];
+	string primeRecs[100];
+	
+	int counter;
+	int maxlength = 0;
+	
+	// and numKernelCubes = number of columns
+	
+	for (int i = 1; i <= numKernelCubes; i++) {
+		// for each column
+		counter = 0;
+		for (int j = 1; j <= numKernels; j++) {
+			if (kernelmatrix[j][i] == "1") {
+				counter++; // found a one
+				if (counter == 1) {
+					rowlocations[i] = rowlocations[i] + intToString(j);
+				}
+				else {
+				rowlocations[i] = rowlocations[i] + "," + intToString(j);		   // store location info	
+				}
+
+				
+			}
+			// store counter in an array
+			numofOnes[i] = counter;
+		}
+		
+		if (counter > maxlength) {
+			maxlength = counter;
+		}
+	}
+	int n = 0;
+	while (maxlength > 1) {
+		
+		for (int k = 1; k <= numKernelCubes; k++) {
+			if (numofOnes[k] == maxlength && numofOnes[k] != 1) {
+				primeRecs[n] += "({" + rowlocations[k] + "},{" + intToString(k) + ",";
+				for (int m = k + 1; m <= numKernelCubes; m++) {
+					if (numofOnes[m] == numofOnes[k] && rowlocations[m] == rowlocations[k] ) {
+						primeRecs[n] += intToString(m) + ",";
+					}
+					else if (m == numKernelCubes)
+					{
+						primeRecs[n] += "})";
+						maxlength--;
+					}
+				}
+				n++;
+			}
+		}	
+		
+	}
+	
+	int pos = 0;
+	for (int y = 0; y < n; y++) {
+		pos = primeRecs[y].find_last_of(",");
+		
+		if (pos > 0) {
+		
+			primeRecs[y].replace(pos, 1, "");
+		}
+	}
+	
+	
+	for (int x = 0; x < n; x++) {
+		outStream << "Prime Rectangles" << endl << primeRecs[x] << endl;
+	}
+	outStream << "Total Number of Prime Rectangles: " << n << endl;
 	
 }
 
@@ -1193,8 +1269,9 @@ int main (int argc, char* argv[])
 	cout << "Processing input file... ";
 
 	findAllKernels();
-	//findKernelCubes();
+	findKernelCubes();
 	createMatrix();
+	
 	
 	cout << "Done!" << endl;
 	
@@ -1213,6 +1290,11 @@ int main (int argc, char* argv[])
 	outStream.open ("KernelCubeMatrix.txt");
 	printKernelMatrix();
 	outStream.close();
+	
+	outStream.open ("PrimeRecs.txt");
+	computePrimeRec();
+	outStream.close();
+	
 	
 	cout << "Done!" << endl;
 	
