@@ -173,6 +173,177 @@ str_array str_sort(string array[])
 	
 }
 
+////////////////////////////^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^WORK!!!!^^^^^^^/////////////////////////////
+bool kernelfind(string cubes[],  int position, int index) /////////
+{
+	int functindex = index;
+	//func func_array[index] = func_array[index];
+	//int foundkernels = false;
+	string switchkernels;	//save the last kernel data
+	string switchcokernels;	//save the last cokernel
+	int switchposition;						//save the last position
+	string switchtemp[lengthOfArray(cubes)];				//save the cubes array
+
+	//cout << "Recurred" << endl;
+	//cout << "Length of cubes: " << lengthOfArray(cubes) << endl;
+	for(int l=0; l<lengthOfArray(cubes); l++)
+			{
+				cout << cubes[l] << endl;
+			}
+	
+	//cout << "BBBBBBB ->>>>>> Cubes at: " << func_array[index].numKernels << "  " << func_array[index].kernels[0] << endl;
+	
+////CASE 1	
+	if(lengthOfArray(cubes) < 2) //base case 1 -  if we didn't find any kernels for this variable, move up in variable and run function again
+	{
+	//	cout << ">>>>>>>Divided by: " << func_array[index].cokernels[func_array[index].numKernels] << "  " << func_array[index].kernels[0] << endl;
+		//cout << "Fewer than 2 cubes, but more variables after " << func_array[index].variables[position] << endl;
+		if(position<func_array[index].numVars){
+			position++;
+			kernelfind(cubes, position, functindex);
+			return true;
+		}
+		else{
+		//cout << "Fewer than 2 cubes, last variable: " << func_array[index].variables[position] << endl;
+		//cout << "Cubes at: " << func_array[index].numKernels << "  " << func_array[index].kernels[0] << endl;
+			return false;
+		
+		}
+		//ELSE = DONE ?????????????????????????????????? BREAK?
+	}
+
+////CASE 2	
+	if(1<lengthOfArray(cubes))	//if there are more than one cube in the array given
+	{
+		//cout << "More than one cube" << endl;
+		string cur_cube; 
+		int pos;			//position of divisor in cube
+		int track = 0;		//how many cubes the divisor is present in
+		string divisor = func_array[index].variables[position];
+		//cout << "numCubes = " << func_array[index].numCubes << endl;
+		string kernelstor[lengthOfArray(cubes) + 1];
+		
+		for (int j = 0; j < lengthOfArray(cubes); j++) {
+			kernelstor[j] = cubes[j];
+		}
+		///////////////////THIS PART RETURNS A STRING ARRAY TEMP OF CUBES DIVISIBLE BY func_array[index].vars[position] /////////////////////////		
+		int kt = 0;
+		string temp[lengthOfArray(cubes) + 1];
+		for (int c = 0; c < lengthOfArray(kernelstor); c++) 
+		{
+			cur_cube = kernelstor[c];
+			pos = cur_cube.find(divisor);	//finds divisor in cube
+			//cout << "Current Cube: " << cur_cube << endl;
+			if (pos != -1) {				//if divisor is in string
+				cur_cube.replace(pos, 1, "");
+				temp[kt] = cur_cube;
+				kt++;
+				//cout << "After: " << cur_cube << endl;
+			}
+		}
+		///temp returned
+		
+		//VARIABLES(POSITION) PRESENT IN EVERY CUBE
+		if(lengthOfArray(cubes)==lengthOfArray(temp))    //func_array[index].vars[position] is present in every cube, add to kernel spot
+		{	
+			//cout << func_array[index].variables[position] << " is present in every cube" << endl;
+			func_array[index].cokernels[func_array[index].numKernels] = func_array[index].cokernels[func_array[index].numKernels] + func_array[index].variables[position];      //add position to this co-kernel of func_array[index]
+			func_array[index].kernels[func_array[index].numKernels] = temp[0];         //add first cube divided by func_array[index].vars.position to the kernel of func_array[index]
+			
+						
+			
+			for (int w=1; w<lengthOfArray(temp); w++) { //add the rest of the cubes to that kernel spot
+				func_array[index].kernels[func_array[index].numKernels] = func_array[index].kernels[func_array[index].numKernels] + " + " + temp[w];
+			}
+			//cout << "Divided by: " << func_array[index].variables[position] << "  " << func_array[index].kernels[func_array[index].numKernels] << endl;
+			//WARNING: kernel spot is the same for now!!!!!! 
+			//Check for other variables that could be present for this kernel:
+			position++;
+			//func_array[index].numKernels++;
+			kernelfind(temp, position, functindex);
+			func_array[index].numKernels++; //checked, move up the kernel spot, DONE
+			
+			//cout << "Storing cube " << func_array[index].kernels[func_array[index].numKernels] << " at function index:" << index << endl;
+			//cout << "numKernels: " << func_array[index].numKernels << endl;
+			//cout << "value of temp: " << temp[0] << endl;
+
+			return true;
+		}
+		
+		//VARIABLE(POSITION) PRESENT IN MORE THAN 2 CUBES, BUT NOT ALL
+		if(lengthOfArray(temp)<lengthOfArray(cubes) && 1<lengthOfArray(temp))    //func_array[index].vars[position] is present in some cubes, but not all
+		{	
+			//cout << func_array[index].variables[position] << " is present in more than one cube, but not ALL" << endl;
+
+			switchkernels = func_array[index].kernels[func_array[index].numKernels];	//save the last kernel data
+			switchcokernels = func_array[index].cokernels[func_array[index].numKernels];	//save the last cokernel
+			switchposition = position;						//save the last position
+			for (int j = 0; j < lengthOfArray(switchtemp); j++) {
+				switchtemp[j] = cubes[j];
+			}
+			func_array[index].cokernels[func_array[index].numKernels] = func_array[index].cokernels[func_array[index].numKernels] + func_array[index].variables[position];      //add position to this co-kernel of func_array[index]
+			func_array[index].kernels[func_array[index].numKernels] = temp[0];         //add first cube divided by func_array[index].vars.position to the kernel of func_array[index]
+			for (int w=1; w<lengthOfArray(temp); w++) 
+			{ //add the rest of the cubes to that kernel spot
+				func_array[index].kernels[func_array[index].numKernels] = func_array[index].kernels[func_array[index].numKernels] + " + " + temp[w];
+			}
+			////WARNING: ERROR-PRONE ZONE!!!///////
+			//cout << "About to recur on kernels of " << func_array[index].variables[position] << endl;
+			position++;
+			kernelfind(temp, position, functindex);
+			//cout << "Kernels at " << func_array[index].numKernels << ":   " << func_array[index].kernels[func_array[index].numKernels] << endl;
+			func_array[index].numKernels++; //DONE, now re-input the break-off (<ALL) point cout << "Kernels at " << func_array[index].numKernels << endl;
+			func_array[index].cokernels[func_array[index].numKernels] = switchcokernels;
+			func_array[index].kernels[func_array[index].numKernels] = switchkernels;
+			//WARNING: kernel spot is the same for now!!!!!! 
+			//Check for other variables that could be present for this kernel:
+			cout << "!!!!!! About to recur on " << func_array[index].variables[switchposition+1] << endl;
+			//cout << "!!!!!!Kernels at " << func_array[index].numKernels << ":   " << func_array[index].kernels[func_array[index].numKernels] << endl;
+			
+			for(int l=0; l<lengthOfArray(switchtemp); l++)
+			{
+				cout << "Switchtemp:  " << switchtemp[l] << endl;
+			}
+			
+			switchposition++;
+			kernelfind(switchtemp, switchposition, functindex);
+			//cout << "!-!Kernels at " << func_array[index].numKernels << ":   " << func_array[index].kernels[func_array[index].numKernels] << endl;
+			func_array[index].numKernels++; //checked, move up the kernel spot
+			return true;
+		}
+
+		//VARIABLES(POSITION) PRESENT IN LESS THAN 2 CUBES
+		else 
+		{      //func_array[index].vars[position] is present in less than one cube, set its temp cubes to NULL
+			//cout << func_array[index].variables[position] << " is present in less than 2 cubes" << endl;
+			//cout << "!!!>>>>>>>>>>>>>Cubes at: " << 0 << "  " << func_array[index].kernels[0] << endl;
+
+			position++;
+			
+			if(position<func_array[index].numVars)
+			{
+				kernelfind(cubes, position, functindex);
+			}
+			
+			else
+			{
+				for (int i = 0; i < lengthOfArray(temp); i++)
+				{
+					temp[i] = ""; // reset the temp array
+				}
+				kernelfind(temp, position, functindex);
+			}
+			return false;
+		}
+	
+}
+	
+	else
+	{
+	return false;
+	}
+}
+
 void divide(int index, int position)
 {
 	// TODO: Fix bug where variables overlap
@@ -357,11 +528,19 @@ func readFunction(string in_line)
 	// get array of all variables
 	
 	string vars [26];
-	string temp;
+	int set;
+	for (set = 0; set < 26; set++)
+	{
+		vars[set] = "";
+		}
+
+	string temp = "";
 	int x = 0;
+	int j = 0;
+	int k = 0;
 	
-	for (int j = 0; j < numberOfCubes; j++) {
-		for (int k = 0; k < cur_func.cubes[j].length(); k++) {
+	for (j = 0; j < numberOfCubes; j++) {
+		for (k = 0; k < cur_func.cubes[j].length(); k++) {
 		
 			temp = cur_func.cubes[j][k]; 
 			
@@ -610,10 +789,28 @@ void findAllKernels()
 {
 	// call divide() for each variable in each kernel
 	
-	for (int i = 0; i < numberOfFunctions; i++) {
-		for (int j = 0; j < func_array[i].numVars ; j++) {
-			divide(i, j);
-		}
+//	for (int i = 0; i < numberOfFunctions; i++) {
+//		for (int j = 0; j < func_array[i].numVars ; j++) {
+//			divide(i, j);
+
+//kernelfind(func_array[0].cubes, 2, 0);
+	for (int i = 0; i < numberOfFunctions; i++) 
+	{
+		//for (int j = 0; j < func_array[i].numVars ; j++)
+		//{
+			kernelfind(func_array[i].cubes,  0, i);
+		
+		//}
+		
+		
+	}
+	
+	for (int i = 0; i < numberOfFunctions; i++) 
+	{
+		for(int b = 0; b<10; b++)
+			{
+				cout << "Kernel in spot " << b << " is:   " << func_array[i].kernels[b] << "   co-kernel:   " << func_array[i].cokernels[b] << endl;
+			}
 	}
 	
 }
@@ -949,7 +1146,7 @@ int main (int argc, char* argv[])
 	cout << "Processing input file... ";
 
 	findAllKernels();
-	findKernelCubes();
+	//findKernelCubes();
 	createMatrix();
 	
 	cout << "Done!" << endl;
