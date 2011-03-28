@@ -44,6 +44,8 @@ string allCubes[100];
 
 string kernelCubes[100]; // list of all kernel cubes
 
+ofstream outStream; // output filestream
+
 
 string intToString(int number)
 {
@@ -301,7 +303,7 @@ func readFunction(string in_line)
 		line[line.length() - 1] = '\0';
 	}
 	
-	cout << "Incoming string: " << line << endl;
+	//cout << "Incoming string: " << line << endl;
 	
     int i = 0;
 	
@@ -328,7 +330,7 @@ func readFunction(string in_line)
 	
 	cur_func.fid = fid;
 	
-	cout << "Function ID: " << cur_func.fid << endl;
+	//cout << "Function ID: " << cur_func.fid << endl;
 	
 	char * cstr;
 	cstr = new char[line.size() + 1];
@@ -450,13 +452,15 @@ int printKernels(bool silent)
 		for (int j = 0; j < func_array[i].numKernels; j++) {
 			
 			if (!silent) {
-				cout << k_count << '\t' << func_array[i].fid << '\t' << func_array[i].kernels[j] << endl;
+				//cout << k_count << '\t' << func_array[i].fid << '\t' << func_array[i].kernels[j] << endl;
+				outStream << k_count << '\t' << func_array[i].fid << '\t' << func_array[i].kernels[j] << endl;
 			}
 			k_count++;
 		}
 	}
 	if (!silent) {
-		cout << "Total Number of Kernels: " << (k_count - 1) << endl;	
+		//cout << "Total Number of Kernels: " << (k_count - 1) << endl;	
+		outStream << "Total Number of Kernels: " << (k_count - 1) << endl;	
 	}
 	
 	return (k_count - 1);
@@ -538,7 +542,7 @@ void findKernelCubes()
 	
 	while (!kcubes[m].empty()) {
 		kernelCubes[m] = sortedCubes.data[m];
-		cout << kernelCubes[m] << endl;
+	//	cout << kernelCubes[m] << endl;
 		m++;
 	}
 	
@@ -592,7 +596,8 @@ void printAllCubes(bool silent)
 	for (x = 0; x < k ; x++) {
 		allCubes[x] = printed[x];
 		if (!silent) {
-		cout << printed[x] << endl;	
+		//cout << x << '\t' << printed[x] << endl;	
+		outStream << x << '\t' << printed[x] << endl;	
 		}
 		
 	}
@@ -714,21 +719,21 @@ void printKernelMatrix()
 	
 	// print cubes of all functions
 
-	cout << "\t\t\t\t";
+	outStream << "\t\t\t\t";
 	for (int i = 0; i < numKernelCubes; i++) {
-		cout << kernelCubes[i] << '\t';
+		outStream << kernelCubes[i] << '\t';
 	}
-	cout << endl;
-	cout << "Kernels" << "\t\t" << "ID" << '\t' << "R\\C" << '\t';
+	outStream << endl;
+	outStream << "Kernels" << "\t\t" << "ID" << '\t' << "R\\C" << '\t';
 	for (int j = 1; j <= numKernelCubes; j++) {
-		cout << j << '\t';
+		outStream << j << '\t';
 	}
-	cout << endl;
+	outStream << endl;
 	
 	for (int div1 = 0; div1 < numKernelCubes + 3; div1++) {
-		cout << divider;
+		outStream << divider;
 	}
-	cout << endl;
+	outStream << endl;
 	
 	int numOfKernels = printKernels(true);
 	
@@ -751,29 +756,29 @@ void printKernelMatrix()
 	while (k_count < numOfKernels) 
 	{
 		if (krl[k_count].length() < 8) {
-		cout << krl[k_count] << "\t\t" << fids[k_count] << '\t';	
+		outStream << krl[k_count] << "\t\t" << fids[k_count] << '\t';	
 		}
 		else {
-			cout << krl[k_count] << '\t' << fids[k_count] << '\t';
+			outStream << krl[k_count] << '\t' << fids[k_count] << '\t';
 		}
 
 		// print out corresponding row in the kernel matrix
 		
 		for (int a = 0; a <= numKernelCubes; a++) {
-			cout << kernelmatrix[k_count + 1][a] << '\t';
+			outStream << kernelmatrix[k_count + 1][a] << '\t';
 		}
 		
 		
 		k_count++;
-		cout << endl;
+		outStream << endl;
 		
 	}
 	
 	
 	for (int div2 = 0; div2 < numKernelCubes + 3; div2++) {
-		cout << divider;
+		outStream << divider;
 	}
-	cout << endl;
+	outStream << endl;
 
 	
 }
@@ -853,6 +858,8 @@ int main (int argc, char* argv[])
     size_of_file = file_stat.st_size; // get size of file
     printf("Size of file: %d\n", size_of_file);
     
+	cout << "Reading file... " << endl;
+	
     fp = fopen(argv[1], "r"); // open file for reading
     if (fp == NULL) 
     {
@@ -975,25 +982,47 @@ int main (int argc, char* argv[])
         count++;
     }
 	
-	int m; //= 0;
-	for (m = 0; m < numberOfFunctions; m++) {
-		printCubes(func_array[m]);
-	
-    
-	
+	int m;
+	//for (m = 0; m < numberOfFunctions; m++) {
+	//	printCubes(func_array[m]);
 
-	//cout << "Function ID: " << func_array[m].fid << endl;
-	//cout << "numCubes: " << func_array[m].numCubes << endl;
-	}
+	//}
 	
-	cout << "Number of cubes: " << numberOfCubes << endl;
+	//cout << "Number of cubes: " << numberOfCubes << endl;
 	
 	// TODO: Modify print functions to print to file, instead of standard output
+	
+	cout << "Processing input file... ";
 
 	findAllKernels();
-	
-
 	findKernelCubes();
+	createMatrix();
+	
+	cout << "Done!" << endl;
+	
+	cout << "Opening output file... ";
+	
+	
+	outStream.open ("Outputfile.txt");
+	
+	if (outStream.is_open()) {
+		// file successfully opened for writing
+		cout << "Done!" << endl;
+		
+		cout << "Writing to file... ";
+		
+		printKernels(false); //-- to print the kernels
+		outStream << endl << endl; // two blank lines between outputs
+		printAllCubes(false);
+		outStream << "Number of Cubes: " << numberOfCubes << endl;
+		outStream << endl << endl; // two blank lines between outputs
+		printKernelMatrix(); 
+		
+	}
+	
+	cout << "Done!" << endl;
+	
+	outStream.close();
 	
 	int n = 0;
 	while (!kernelCubes[n].empty()) {

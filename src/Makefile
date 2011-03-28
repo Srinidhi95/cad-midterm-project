@@ -6,4 +6,4 @@ old:
 	gcc -o cad main.c
 	
 clean:
-	rm -rf cad
+	rm -rf cad Outputfile.txt
