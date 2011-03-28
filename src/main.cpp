@@ -48,6 +48,8 @@ string kernelCubes[100]; // list of all kernel cubes
 string primeRecs[100];
 string candidateRecs[100];
 int numPrimeRecs;
+string candidateRecstop = "";
+string topcandidatefid = "";
 
 ofstream outStream; // output filestream
 
@@ -852,7 +854,7 @@ void printKernelMatrix()
 	
 	string divider = "----------";
 	
-	//int numOfKernels = printKernels(true);
+
 	
 	// print cubes of all functions
 
@@ -1066,6 +1068,9 @@ void computeCandidateRec()
 			//cout << "index: " << index<< endl;
 			
 			cur_fid = fids_array[index - 1];
+			if (i==0) {
+				topcandidatefid = topcandidatefid + " " + intToString(cur_fid);
+			}
 			
 			while (str1 != NULL){
 				
@@ -1090,6 +1095,10 @@ void computeCandidateRec()
 		
 			if (flag == 1) {
 				// is a candidate
+				if(count==0){
+					candidateRecstop = cube;
+				}
+				}
 				candidateRecs[count] = primeRecs[i];
 				outStream << candidateRecs[count] << "\t\t" << cube << endl;
 				
@@ -1102,18 +1111,10 @@ void computeCandidateRec()
 						
 		}
 		
-	
-	}
 	outStream << endl << "Number of Candidate Rectangles: " << count << endl;
 	
+	}
 	
-}
-
-void printNetwork()
-{
-	
-	
-}
 
 int main (int argc, char* argv[])
 {
@@ -1264,14 +1265,7 @@ int main (int argc, char* argv[])
     }
 	
 	int m;
-	//for (m = 0; m < numberOfFunctions; m++) {
-	//	printCubes(func_array[m]);
 
-	//}
-	
-	//cout << "Number of cubes: " << numberOfCubes << endl;
-	
-	// TODO: Modify print functions to print to file, instead of standard output
 	
 	cout << "Processing input file... ";
 
@@ -1305,27 +1299,8 @@ int main (int argc, char* argv[])
 	
 	outStream.close();
 	cout << "Done!" << endl;
-	
-	int n = 0;
-	while (!kernelCubes[n].empty()) {
-		
-	//	cout << "Kernel Cube (" << n << "): " << kernelCubes[n] << endl;
-		n++;
-	}
-	
-	//displayMenu();
-	
-//	printAllCubes(true);
-	
-	//findKernelCubes();
-	//createMatrix();
-	
-//	printKernelMatrix();
-	
-	// done reading file
-	
-	
-	
+
+
 	return 0;
 }
 
