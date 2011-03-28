@@ -1044,7 +1044,7 @@ void computePrimeRec()
 	int numofOnes[numKernelCubes + 2]; // an array to hold the number of ones
 	
 	string rowlocations[numKernelCubes + 2];
-	
+	string cubes[numKernelCubes + 2];
 	
 	int counter;
 	int maxlength = 0;
@@ -1080,10 +1080,13 @@ void computePrimeRec()
 		for (int k = 1; k <= numKernelCubes; k++) {
 			if (numofOnes[k] == maxlength && numofOnes[k] != 1) {
 				primeRecs[n] += "({" + rowlocations[k] + "},{" + intToString(k) + ",";
+				
+				cubes[n] = kernelCubes[k - 1]; 
 				for (int m = k + 1; m <= numKernelCubes; m++) {
 					if ((1<numofOnes[m]) && ((rowlocations[m].find(rowlocations[k])==0)||(rowlocations[k].find(rowlocations[m])))) 
 					{
 						//cout << "Row locations of " << m << " - Row locations of " << k << endl;
+						cubes[n] = cubes[n] + " + " + kernelCubes[m - 1];
 						primeRecs[n] += intToString(m) + ",";
 					}
 					else if (m == numKernelCubes)
@@ -1110,10 +1113,10 @@ void computePrimeRec()
 	
 	outStream << "Prime Rectangles: " << endl;
 	for (int x = 0; x < n; x++) {
-		outStream << primeRecs[x] << endl;
+		outStream << primeRecs[x] << "\t\t" << cubes[x] << endl;
 	}
 	
-	outStream << endl << "Total Number of Prime Rectangles: " << n << endl;
+	outStream << endl << "Total Number of Prime Rectangles: " << n << endl << endl;
 	numPrimeRecs = n;
 	
 }
@@ -1126,9 +1129,19 @@ void computeCandidateRec()
 	
 	string str;
 	
+	char *str1;
+	
 	string s_str;
 	int pos;
+	int pos_end;
 	int count = 0;
+	int index;
+	int cur_fid;
+	int flag = 0;
+	
+	string cube;
+	
+	char * cstr;
 	
 	for (int i = 0; i < numPrimeRecs; i++) {
 		
@@ -1143,15 +1156,65 @@ void computeCandidateRec()
 			
 		}
 		
+		
 		if (s_str.find(",") >= 0) {
-			// is a candidate
-			candidateRecs[count] = primeRecs[i];
-			count++;
 			
+			pos_end = s_str.find("}");
+			s_str = s_str.substr(0,pos_end);
+			
+			cstr = new char[s_str.size() + 1];
+			strcpy (cstr, s_str.c_str());
+			
+			// now tokenize cstr
+			str1 = strtok(cstr, ",");		
+			//str1 = strtok(NULL, " + ");
+			index = atoi(str1);
+			
+			cube = kernelCubes[index - 1];
+			//cout << "cube: " << cube << endl;
+		
+			//cout << "index: " << index<< endl;
+			
+			cur_fid = fids_array[index - 1];
+			
+			while (str1 != NULL){
+				
+				str1 = strtok(NULL, ",");
+				if (str1 != NULL) {
+					
+					index = atoi(str1);
+					cube = cube + " + " + kernelCubes[index - 1];
+				
+				//	cout << "index2 = " << index << endl;
+					if (cur_fid == fids_array[index]) {
+						flag = 0;
+					}
+					else {
+						flag = 1;
+					}
+
+				}
+		
+				
+			}
+		
+			if (flag == 1) {
+				// is a candidate
+				candidateRecs[count] = primeRecs[i];
+				outStream << candidateRecs[count] << "\t\t" << cube << endl;
+				
+			
+				count++;
+
+			}
+			
+			
+						
 		}
+		
 	
 	}
-	
+	outStream << endl << "Number of Candidate Rectangles: " << count << endl;
 	
 	
 }
@@ -1327,7 +1390,7 @@ int main (int argc, char* argv[])
 	
 	cout << "Done!" << endl;
 	
-	cout << "Outputting Results... ";
+	cout << "Outputting Results... " << endl;
 	
 	
 	outStream.open ("Kernels.txt");
@@ -1342,10 +1405,9 @@ int main (int argc, char* argv[])
 	
 	outStream.open ("PrimeRecs.txt");
 	computePrimeRec();
-	outStream.close();
-	
 	computeCandidateRec();
 	
+	outStream.close();
 	cout << "Done!" << endl;
 	
 	int n = 0;
