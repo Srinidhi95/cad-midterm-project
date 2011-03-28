@@ -179,10 +179,10 @@ bool kernelfind(string cubes[],  int position, int index) /////////
 	int functindex = index;
 	//func func_array[index] = func_array[index];
 	//int foundkernels = false;
-	string switchkernels;	//save the last kernel data
-	string switchcokernels;	//save the last cokernel
-	int switchposition;						//save the last position
-	string switchtemp[lengthOfArray(cubes)];				//save the cubes array
+	//string switchkernels;	//save the last kernel data
+	//string switchcokernels;	//save the last cokernel
+	//int switchposition;						//save the last position
+	//string switchtemp[lengthOfArray(cubes)];				//save the cubes array
 
 	//cout << "Recurred" << endl;
 	//cout << "Length of cubes: " << lengthOfArray(cubes) << endl;
@@ -206,11 +206,23 @@ bool kernelfind(string cubes[],  int position, int index) /////////
 		else{
 		//cout << "Fewer than 2 cubes, last variable: " << func_array[index].variables[position] << endl;
 		//cout << "Cubes at: " << func_array[index].numKernels << "  " << func_array[index].kernels[0] << endl;
+			/*string fkernel;
+			fkernel = func_array[index].cubes[0];
+			for(int y = 1; y < lengthOfArray(func_array[index].cubes); y++){
+				fkernel = fkernel + " + " + func_array[index].cubes[y];
+			}
+			if(func_array[index].kernels[func_array[index].numKernels]!="")
+			{
+				func_array[index].numKernels++;
+			}
+			
+			func_array[index].kernels[func_array[index].numKernels] = fkernel;
+			*/
+			
 			return false;
-		
 		}
-		//ELSE = DONE ?????????????????????????????????? BREAK?
 	}
+		//ELSE = DONE ?????????????????????????????????? BREAK?
 
 ////CASE 2	
 	if(1<lengthOfArray(cubes))	//if there are more than one cube in the array given
@@ -275,41 +287,67 @@ bool kernelfind(string cubes[],  int position, int index) /////////
 		{	
 			//cout << func_array[index].variables[position] << " is present in more than one cube, but not ALL" << endl;
 
-			switchkernels = func_array[index].kernels[func_array[index].numKernels];	//save the last kernel data
-			switchcokernels = func_array[index].cokernels[func_array[index].numKernels];	//save the last cokernel
-			switchposition = position;						//save the last position
-			for (int j = 0; j < lengthOfArray(switchtemp); j++) {
-				switchtemp[j] = cubes[j];
+			func_array[index].storedkernels[func_array[index].storedindex] = func_array[index].kernels[func_array[index].numKernels];	//save the last kernel data
+			func_array[index].storedcokernels[func_array[index].storedindex] = func_array[index].cokernels[func_array[index].numKernels];	//save the last cokernel
+			func_array[index].storedposition = position;						//save the last position
+			for (int j = 0; j < 10; j++) 
+			{
+				func_array[index].storedtemp[func_array[index].storedindex][j] = cubes[j];
+				//cout << "The stored array at index " << func_array[index].storedindex << ": " << func_array[index].storedtemp[func_array[index].storedindex][j] << endl;
 			}
+			func_array[index].storedindex++;
+			//cout << "BREAKPOINT VARIABLE: " << func_array[index].variables[func_array[index].storedposition] << " index: " << func_array[index].storedposition << " out of " << func_array[index].numVars << endl;
+			
 			func_array[index].cokernels[func_array[index].numKernels] = func_array[index].cokernels[func_array[index].numKernels] + func_array[index].variables[position];      //add position to this co-kernel of func_array[index]
 			func_array[index].kernels[func_array[index].numKernels] = temp[0];         //add first cube divided by func_array[index].vars.position to the kernel of func_array[index]
 			for (int w=1; w<lengthOfArray(temp); w++) 
 			{ //add the rest of the cubes to that kernel spot
 				func_array[index].kernels[func_array[index].numKernels] = func_array[index].kernels[func_array[index].numKernels] + " + " + temp[w];
 			}
-			////WARNING: ERROR-PRONE ZONE!!!///////
+				////WARNING: ERROR-PRONE ZONE!!!///////
 			//cout << "About to recur on kernels of " << func_array[index].variables[position] << endl;
 			position++;
 			kernelfind(temp, position, functindex);
 			//cout << "Kernels at " << func_array[index].numKernels << ":   " << func_array[index].kernels[func_array[index].numKernels] << endl;
 			func_array[index].numKernels++; //DONE, now re-input the break-off (<ALL) point cout << "Kernels at " << func_array[index].numKernels << endl;
-			func_array[index].cokernels[func_array[index].numKernels] = switchcokernels;
-			func_array[index].kernels[func_array[index].numKernels] = switchkernels;
-			//WARNING: kernel spot is the same for now!!!!!! 
-			//Check for other variables that could be present for this kernel:
-			cout << "!!!!!! About to recur on " << func_array[index].variables[switchposition+1] << endl;
-			//cout << "!!!!!!Kernels at " << func_array[index].numKernels << ":   " << func_array[index].kernels[func_array[index].numKernels] << endl;
 			
-			for(int l=0; l<lengthOfArray(switchtemp); l++)
-			{
-				cout << "Switchtemp:  " << switchtemp[l] << endl;
+			int totalvars = func_array[index].numVars - 1;
+			
+			if(func_array[index].storedposition==totalvars){
+				for (int i = 0; i < lengthOfArray(temp); i++)
+				{
+					temp[i] = ""; // reset the temp array
+				}
+				kernelfind(temp, func_array[index].storedposition, functindex);
+				return false;
 			}
 			
-			switchposition++;
-			kernelfind(switchtemp, switchposition, functindex);
-			//cout << "!-!Kernels at " << func_array[index].numKernels << ":   " << func_array[index].kernels[func_array[index].numKernels] << endl;
-			func_array[index].numKernels++; //checked, move up the kernel spot
-			return true;
+			else
+			{
+				func_array[index].storedindex--;
+				func_array[index].cokernels[func_array[index].numKernels] = func_array[index].storedcokernels[func_array[index].storedindex];
+				func_array[index].kernels[func_array[index].numKernels] = func_array[index].storedkernels[func_array[index].storedindex];	///PROBLEM???
+				//WARNING: kernel spot is the same for now!!!!!! 
+				//Check for other variables that could be present for this kernel:
+				//cout << "!!!!!! About to recur on " << func_array[index].variables[func_array[index].storedposition+1] << endl;
+				//cout << "!!!!!!Kernels at " << func_array[index].numKernels - 1 << ":   " << func_array[index].kernels[func_array[index].numKernels - 1] << endl;
+				
+				string switchtemp[10];
+				for(int l=0; l<10; l++)
+				{
+					switchtemp[l] =	func_array[index].storedtemp[func_array[index].storedindex][l];		
+				}
+				
+				func_array[index].storedposition++;
+				kernelfind(switchtemp, func_array[index].storedposition, functindex);
+				//cout << "!-!Kernels at " << func_array[index].numKernels - 1 << ":   " << func_array[index].kernels[func_array[index].numKernels - 1] << endl;
+				func_array[index].numKernels++; //checked, move up the kernel spot
+				return true;
+			}
+			//else {
+			//	return true;
+			//}
+
 		}
 
 		//VARIABLES(POSITION) PRESENT IN LESS THAN 2 CUBES
@@ -626,7 +664,6 @@ int printKernels(bool silent)
 	
 	int k_count = 1;
 	
-	
 	for (int i = 0; i < numberOfFunctions; i++) {
 		for (int j = 0; j < func_array[i].numKernels; j++) {
 			
@@ -796,13 +833,23 @@ void findAllKernels()
 //kernelfind(func_array[0].cubes, 2, 0);
 	for (int i = 0; i < numberOfFunctions; i++) 
 	{
-		//for (int j = 0; j < func_array[i].numVars ; j++)
-		//{
-			kernelfind(func_array[i].cubes,  0, i);
+		func_array[i].storedindex = 0;
+		kernelfind(func_array[i].cubes,  0, i);
 		
-		//}
+		string fkernel = func_array[i].cubes[0];
+		for(int y = 1; y < lengthOfArray(func_array[i].cubes); y++){
+			fkernel = fkernel + " + " + func_array[i].cubes[y];
+		}
 		
-		
+		if(func_array[i].numKernels!=0)
+		{
+			cout << "HIT" << endl;
+			func_array[i].numKernels--;
+		}
+			
+		func_array[i].kernels[func_array[i].numKernels] = fkernel;
+		func_array[i].cokernels[func_array[i].numKernels] = "1";
+		func_array[i].numKernels++;
 	}
 	
 	for (int i = 0; i < numberOfFunctions; i++) 

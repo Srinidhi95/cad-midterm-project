@@ -21,6 +21,11 @@ typedef struct
 	
 	string variables[26];
 	
+	string storedkernels[10];
+	string storedcokernels[10];
+	int storedposition;
+	string storedtemp[10][10];
+	int storedindex;
 	
 } func;
 
