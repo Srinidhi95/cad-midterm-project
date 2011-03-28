@@ -182,7 +182,6 @@ void divide(int index, int position)
 	//cout << "Function ID: " << f1.fid << endl;
 	
 	
-	
 	int fk = f1.numKernels;
 	string cur_cube; 
 	int pos;			//position of divisor in cube
@@ -707,7 +706,6 @@ void createMatrix()
 	
 }
 
-
 void printKernelMatrix()
 {
 	// first line is unique cubes - 4 tabs
@@ -784,56 +782,11 @@ void printKernelMatrix()
 	
 }
 
-
-void displayMenu()
+void computePrimeRec()
 {
-	// Displays menu for selecting printing options
-	
-	cout << "\t\t\t\t\t" << "CAD for Digital Systems" << endl;
-	cout << "\t\t\t\t\t" << "    Midterm Project" << endl;
-	cout << endl;
-	
-	string input = "";
-	
-	cout << "Please select from the following menu:" << endl;
-	cout << "(1) Print all Kernels" << endl;
-	cout << "(2) Print all Cubes" << endl;
-	cout << "(3) Print the Kernel-Cube Matrix" << endl;
-	
-	cout << endl;
 	
 	
-	
-	int selection = 0;
-	
-	while (true) {
-		cout << "Enter the number corresponding to your selection: ";
-		getline(cin, input);
-		
-		stringstream inputStream(input);
-		if (inputStream >> selection) {
-			break;
-			cout << "Invalid Entry, please try again." << endl;
-		}
-	}
-		
-		switch (selection) {
-			case 1:
-				cout << "Selected 1" << endl;
-				break;
-			case 2:
-				cout << "Selected 2" << endl;
-				break;
-			case 3:
-				cout << "Selected 3" << endl;
-				break;
-			default:
-				cout << "Out of Range - Please try again." << endl;
-				break;
-		}
-
 }
-
 
 int main (int argc, char* argv[])
 {
