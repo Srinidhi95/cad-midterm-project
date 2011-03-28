@@ -41,6 +41,7 @@ func func_array[20]; // max 20 functions
 string kernelmatrix[100][100]; // to store kernel-cube matrix
 
 string allCubes[100];
+int fids_array[26];
 
 string kernelCubes[100]; // list of all kernel cubes
 
@@ -993,6 +994,7 @@ void printKernelMatrix()
 		for (int y = 0; y < func_array[x].numKernels; y++) {
 			krl[count] = func_array[x].kernels[y]; 
 			fids[count] = func_array[x].fid;
+			fids_array[count] = fids[count]; // used later with prime rectangles
 			count++;
 		}
 	}
@@ -1079,9 +1081,6 @@ void computePrimeRec()
 			if (numofOnes[k] == maxlength && numofOnes[k] != 1) {
 				primeRecs[n] += "({" + rowlocations[k] + "},{" + intToString(k) + ",";
 				for (int m = k + 1; m <= numKernelCubes; m++) {
-				//cout << "Rowlocations of " << k << " : " << rowlocations[k] << endl;
-				//cout << "Rowlocations of " << m << " : " << rowlocations[m] << endl;
-				//cout << "k in m? " << rowlocations[m].find(rowlocations[k]) << "  m in k? " << rowlocations[k].find(rowlocations[m]) << endl;
 					if ((1<numofOnes[m]) && ((rowlocations[m].find(rowlocations[k])==0)||(rowlocations[k].find(rowlocations[m])))) 
 					{
 						//cout << "Row locations of " << m << " - Row locations of " << k << endl;
@@ -1109,11 +1108,12 @@ void computePrimeRec()
 		}
 	}
 	
-	
+	outStream << "Prime Rectangles: " << endl;
 	for (int x = 0; x < n; x++) {
-		outStream << "Prime Rectangles" << endl << primeRecs[x] << endl;
+		outStream << primeRecs[x] << endl;
 	}
-	outStream << "Total Number of Prime Rectangles: " << n << endl;
+	
+	outStream << endl << "Total Number of Prime Rectangles: " << n << endl;
 	numPrimeRecs = n;
 	
 }
@@ -1124,21 +1124,32 @@ void computeCandidateRec()
 //	primeRecs
 	string candidateRecs[numPrimeRecs + 1]; // to store candidate rectangles
 	
-	char * str1;
-	string str2;
+	string str;
+	
+	string s_str;
 	int pos;
+	int count = 0;
 	
 	for (int i = 0; i < numPrimeRecs; i++) {
-		char * cstr;
-		cstr = new char[primeRecs[i].length()];
-		strcpy (cstr, primeRecs[i].c_str());
-		str1 = strtok(cstr, "},{");
-		str2 = str1;
 		
-		cout << "string = " << str2 << endl;
+		str = primeRecs[i];
 		
+		pos = str.find("},{");
 		
-		//primeRecs
+		if(pos >= 0){
+			//found
+			s_str = str.substr(pos + 3, 50);
+			//cout << "substring: " << s_str << endl;	
+			
+		}
+		
+		if (s_str.find(",") >= 0) {
+			// is a candidate
+			candidateRecs[count] = primeRecs[i];
+			count++;
+			
+		}
+	
 	}
 	
 	
