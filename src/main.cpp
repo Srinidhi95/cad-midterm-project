@@ -1079,7 +1079,12 @@ void computePrimeRec()
 			if (numofOnes[k] == maxlength && numofOnes[k] != 1) {
 				primeRecs[n] += "({" + rowlocations[k] + "},{" + intToString(k) + ",";
 				for (int m = k + 1; m <= numKernelCubes; m++) {
-					if (numofOnes[m] == numofOnes[k] && rowlocations[m] == rowlocations[k] ) {
+				//cout << "Rowlocations of " << k << " : " << rowlocations[k] << endl;
+				//cout << "Rowlocations of " << m << " : " << rowlocations[m] << endl;
+				//cout << "k in m? " << rowlocations[m].find(rowlocations[k]) << "  m in k? " << rowlocations[k].find(rowlocations[m]) << endl;
+					if ((1<numofOnes[m]) && ((rowlocations[m].find(rowlocations[k])==0)||(rowlocations[k].find(rowlocations[m])))) 
+					{
+						//cout << "Row locations of " << m << " - Row locations of " << k << endl;
 						primeRecs[n] += intToString(m) + ",";
 					}
 					else if (m == numKernelCubes)
