@@ -88,6 +88,7 @@ int lengthOfArray(string array [])
 
 str_array str_sort(string array[])
 {
+	
 	// sort initially alphabetically
 	
 	string temp = "";
@@ -1000,29 +1001,23 @@ int main (int argc, char* argv[])
 	
 	cout << "Done!" << endl;
 	
-	cout << "Opening output file... ";
+	cout << "Outputting Results... ";
 	
 	
-	outStream.open ("Outputfile.txt");
+	outStream.open ("Kernels.txt");
+	printKernels(false); //-- to print the kernels
+	outStream.close();
+		
+	outStream.open ("Cubes.txt");
+	printAllCubes(false);
+	outStream << "Number of Cubes: " << numberOfCubes << endl;
+	outStream.close();
 	
-	if (outStream.is_open()) {
-		// file successfully opened for writing
-		cout << "Done!" << endl;
-		
-		cout << "Writing to file... ";
-		
-		printKernels(false); //-- to print the kernels
-		outStream << endl << endl; // two blank lines between outputs
-		printAllCubes(false);
-		outStream << "Number of Cubes: " << numberOfCubes << endl;
-		outStream << endl << endl; // two blank lines between outputs
-		printKernelMatrix(); 
-		
-	}
+	outStream.open ("KernelCubeMatrix.txt");
+	printKernelMatrix();
+	outStream.close();
 	
 	cout << "Done!" << endl;
-	
-	outStream.close();
 	
 	int n = 0;
 	while (!kernelCubes[n].empty()) {
