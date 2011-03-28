@@ -764,7 +764,7 @@ void findKernelCubes()
 		m++;
 	}
 	
-	outStream << "Total Number of Cubes: " << m << endl;
+	outStream << endl << "Total Number of Cubes: " << m << endl;
 	
 	numKernelCubes = m; // set the number of unique kernel cubes;
 	
