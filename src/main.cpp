@@ -16,6 +16,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -625,7 +626,6 @@ void createMatrix()
 	
 	string krl[numOfKernels + 1];// store all kernels locally
 	
-	//string tempkcube; // to hold kernel cube when calling find()
 	
 	char *str1;
 	char *cstr;
@@ -639,8 +639,6 @@ void createMatrix()
 			count++;
 		}
 	}
-	
-	
 	
 	// write the first column, 0 (R/C)
 	
@@ -656,8 +654,6 @@ void createMatrix()
 	
 	for (row = 1; row <= numOfKernels; row++) { 
 		for (col = 1; col <= numKernelCubes; col++) {
-		//	kernelmatrix[row][0] = intToString(row);
-			// TODO: Print rest of matrix
 			
 			// check if kernel cube at col is present in kernel at row
 		
@@ -687,30 +683,16 @@ void createMatrix()
 					
 				}
 			}
-				
-				
 			
-			
-			
-			
-			
-			
-			//tempkcube = kernelCubes[col - 1];
-			//tempkcube = tempkcube + " ";
-			
-			//found = krl[row - 1].find(tempkcube);
 			
 			if (found == 1) {
 				// found a match
 				kernelmatrix[row][col] = '1';
-				//cout << "Found, krl = " << krl[row - 1] << " , cube = " << kernelCubes[col - 1] << endl;
 			}
 			else {
 				kernelmatrix[row][col] = '0';
-				//cout << "Not found, krl = " << krl[row - 1] << " , cube = " << kernelCubes[col - 1] << endl;
 			}
 			
-			// kernelmatrix[row][col] = intToString(col);
 		}
 	}
 
@@ -718,7 +700,6 @@ void createMatrix()
 	
 	
 }
-
 
 
 void printKernelMatrix()
@@ -796,6 +777,57 @@ void printKernelMatrix()
 
 	
 }
+
+
+void displayMenu()
+{
+	// Displays menu for selecting printing options
+	
+	cout << "\t\t\t\t\t" << "CAD for Digital Systems" << endl;
+	cout << "\t\t\t\t\t" << "    Midterm Project" << endl;
+	cout << endl;
+	
+	string input = "";
+	
+	cout << "Please select from the following menu:" << endl;
+	cout << "(1) Print all Kernels" << endl;
+	cout << "(2) Print all Cubes" << endl;
+	cout << "(3) Print the Kernel-Cube Matrix" << endl;
+	
+	cout << endl;
+	
+	
+	
+	int selection = 0;
+	
+	while (true) {
+		cout << "Enter the number corresponding to your selection: ";
+		getline(cin, input);
+		
+		stringstream inputStream(input);
+		if (inputStream >> selection) {
+			break;
+			cout << "Invalid Entry, please try again." << endl;
+		}
+	}
+		
+		switch (selection) {
+			case 1:
+				cout << "Selected 1" << endl;
+				break;
+			case 2:
+				cout << "Selected 2" << endl;
+				break;
+			case 3:
+				cout << "Selected 3" << endl;
+				break;
+			default:
+				cout << "Out of Range - Please try again." << endl;
+				break;
+		}
+
+}
+
 
 int main (int argc, char* argv[])
 {
@@ -956,10 +988,10 @@ int main (int argc, char* argv[])
 	
 	cout << "Number of cubes: " << numberOfCubes << endl;
 	
-	
+	// TODO: Modify print functions to print to file, instead of standard output
 
 	findAllKernels();
-	printKernels(false);
+	
 
 	findKernelCubes();
 	
@@ -970,14 +1002,14 @@ int main (int argc, char* argv[])
 		n++;
 	}
 	
-//	cout << "Number of Kernel Cubes: " << n << endl;
+	//displayMenu();
 	
-	printAllCubes(true);
+//	printAllCubes(true);
 	
 	//findKernelCubes();
-	createMatrix();
+	//createMatrix();
 	
-	printKernelMatrix();
+//	printKernelMatrix();
 	
 	// done reading file
 	
