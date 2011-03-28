@@ -44,6 +44,9 @@ string allCubes[100];
 
 string kernelCubes[100]; // list of all kernel cubes
 
+string primeRecs[100];
+int numPrimeRecs;
+
 ofstream outStream; // output filestream
 
 
@@ -757,10 +760,11 @@ void findKernelCubes()
 	
 	while (!kcubes[m].empty()) {
 		kernelCubes[m] = sortedCubes.data[m];
-	//	cout << kernelCubes[m] << endl;
+		outStream << m << '\t' << kernelCubes[m] << endl;
 		m++;
 	}
 	
+	outStream << "Total Number of Cubes: " << m << endl;
 	
 	numKernelCubes = m; // set the number of unique kernel cubes;
 	
@@ -1038,7 +1042,7 @@ void computePrimeRec()
 	int numofOnes[numKernelCubes + 2]; // an array to hold the number of ones
 	
 	string rowlocations[numKernelCubes + 2];
-	string primeRecs[100];
+	
 	
 	int counter;
 	int maxlength = 0;
@@ -1105,6 +1109,34 @@ void computePrimeRec()
 		outStream << "Prime Rectangles" << endl << primeRecs[x] << endl;
 	}
 	outStream << "Total Number of Prime Rectangles: " << n << endl;
+	numPrimeRecs = n;
+	
+}
+
+void computeCandidateRec()
+{
+	
+//	primeRecs
+	string candidateRecs[numPrimeRecs + 1]; // to store candidate rectangles
+	
+	char * str1;
+	string str2;
+	int pos;
+	
+	for (int i = 0; i < numPrimeRecs; i++) {
+		char * cstr;
+		cstr = new char[primeRecs[i].length()];
+		strcpy (cstr, primeRecs[i].c_str());
+		str1 = strtok(cstr, "},{");
+		str2 = str1;
+		
+		cout << "string = " << str2 << endl;
+		
+		
+		//primeRecs
+	}
+	
+	
 	
 }
 
@@ -1269,7 +1301,11 @@ int main (int argc, char* argv[])
 	cout << "Processing input file... ";
 
 	findAllKernels();
+	
+	outStream.open ("Cubes.txt");
 	findKernelCubes();
+	outStream.close();
+	
 	createMatrix();
 	
 	
@@ -1282,10 +1318,7 @@ int main (int argc, char* argv[])
 	printKernels(false); //-- to print the kernels
 	outStream.close();
 		
-	outStream.open ("Cubes.txt");
-	printAllCubes(false);
-	outStream << "Number of Cubes: " << numberOfCubes << endl;
-	outStream.close();
+
 	
 	outStream.open ("KernelCubeMatrix.txt");
 	printKernelMatrix();
@@ -1295,6 +1328,7 @@ int main (int argc, char* argv[])
 	computePrimeRec();
 	outStream.close();
 	
+	computeCandidateRec();
 	
 	cout << "Done!" << endl;
 	
