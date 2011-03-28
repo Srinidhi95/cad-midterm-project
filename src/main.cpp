@@ -760,7 +760,7 @@ void findKernelCubes()
 	
 	while (!kcubes[m].empty()) {
 		kernelCubes[m] = sortedCubes.data[m];
-		outStream << m << '\t' << kernelCubes[m] << endl;
+		outStream << (m + 1) << '\t' << kernelCubes[m] << endl;
 		m++;
 	}
 	
