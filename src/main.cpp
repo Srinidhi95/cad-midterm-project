@@ -46,6 +46,7 @@ int fids_array[26];
 string kernelCubes[100]; // list of all kernel cubes
 
 string primeRecs[100];
+string candidateRecs[100];
 int numPrimeRecs;
 
 ofstream outStream; // output filestream
@@ -385,117 +386,6 @@ bool kernelfind(string cubes[],  int position, int index)
 	}
 }
 
-void divide(int index, int position)
-{
-	// TODO: Fix bug where variables overlap
-	
-	func f1 = func_array[index];
-	
-	//cout << "Function ID: " << f1.fid << endl;
-	
-	
-	int fk = f1.numKernels;
-	string cur_cube; 
-	int pos;			//position of divisor in cube
-	int track = 0;		//how many cubes the divisor is present in
-						//will make use of variables
-	string divisor = f1.variables[position];
-																//cout << "numCubes = " << f1.numCubes << endl;
-		string kernelstor[10];
-		
-		for (int j = 0; j < 10; j++) {
-			kernelstor[j] = f1.cubes[j];
-		}
-		
-		
-///////////////////THIS PART RETURNS A STRING ARRAY TEMP OF CUBES DIVISIBLE BY f1.vars[position] /////////////////////////		
-		int kt = 0;
-		string temp[10];
-		for (int c = 0; c < f1.numCubes; c++) 
-		{
-			cur_cube = kernelstor[c];
-			pos = cur_cube.find(divisor);	//finds divisor in cube
-			//cout << "Current Cube: " << cur_cube << endl;
-			if (pos != -1) {				//if divisor is in string
-				cur_cube.replace(pos, 1, "");
-				temp[kt] = cur_cube;
-				kt++;
-				//cout << "After: " << cur_cube << endl;
-			}
-		}
-	//cout << "Temp length: " << lengthOfArray(temp) << endl;
-	//for(int p=0;p<lengthOfArray(temp);p++){
-	//	cout << temp[p] << endl; 
-	//}
-		//return temp;
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
-//////////////// USING TEMP RESULTS: /////////////////////////////
-		
-		if (lengthOfArray(temp) < 2) {      //f1.vars[position] is present in less than one cube, set its temp cubes to NULL
-			temp[0] = "";
-		}
-		else {                              //f1.vars[position] is present in more than one cube, now check if any other variable is present in ALL
-			f1.numKernels++;
-			f1.cokernels[fk] = f1.variables[position];      //add position as co-kernel of f1
-			f1.kernels[fk] = temp[0];         //add first cube divided by f1.vars.position to the kernel of f1
-			for (int w=1; w<lengthOfArray(temp); w++) { //add the rest of the cubes to that kernel spot
-				f1.kernels[fk] = f1.kernels[fk] + " + " + temp[w];
-			}
-			
-			int location;
-			string current_cube;
-			
-			string ntemp[lengthOfArray(temp)+10];
-			int u = 0;
-			
-			for (int e = position + 1; e<f1.numVars; e++) {  //concatenate through variables
-				u = 0;
-				for(int c = 0; c < lengthOfArray(temp); c++){ //concatenate through cubes for variable e and add each divisible cube to ntemp[]
-					current_cube = temp[c];
-					location = current_cube.find(f1.variables[e]);
-					if (location != -1) {				//if divisor is in string
-						current_cube.replace(location, 1, "");
-						ntemp[u] = current_cube;
-						u++;				
-					}
-				}
-				//cout << "Length of ntemp: " << lengthOfArray(ntemp) << " variable: " << f1.variables[e] << endl;
-				//for(int p=0;p<lengthOfArray(ntemp);p++){
-				//	cout << ntemp[p] << endl;}
-				
-				if (lengthOfArray(ntemp)==lengthOfArray(temp)) {	//all of kernel divisible by variable, add it to cokernel, replace kernel
-					f1.cokernels[fk] = f1.cokernels[fk] + f1.variables[e];
-					f1.kernels[fk] = ntemp[0];
-					for (int w=1; w<lengthOfArray(ntemp); w++) { //add the rest of the cubes to that kernel spot
-						f1.kernels[fk] = f1.kernels[fk] + " + " + ntemp[w];
-					}
-					
-					u = 0;
-					//cout << "About to reset ntemp" << endl;
-						for (int z = 0; z < lengthOfArray(temp) + 10; z++)
-						{
-					//		cout << "reset: " << ntemp[z] << endl;
-							ntemp[z] = "";
-						}		
-				}
-				else {
-					u = 0;
-					for (int z = 0; z < lengthOfArray(ntemp); z++)
-					{
-						ntemp[z] = "";
-					}
-				}
-					
-					
-			
-		}
-		
-		}
-	
-	func_array[index] = f1;
-		
-	
-}
 
 func readFunction(string in_line)
 {
@@ -1125,7 +1015,7 @@ void computeCandidateRec()
 {
 	
 //	primeRecs
-	string candidateRecs[numPrimeRecs + 1]; // to store candidate rectangles
+//	string candidateRecs[numPrimeRecs + 1]; // to store candidate rectangles
 	
 	string str;
 	
@@ -1215,6 +1105,12 @@ void computeCandidateRec()
 	
 	}
 	outStream << endl << "Number of Candidate Rectangles: " << count << endl;
+	
+	
+}
+
+void printNetwork()
+{
 	
 	
 }
