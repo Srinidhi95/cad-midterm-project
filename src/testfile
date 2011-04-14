@@ -1,8 +1,26 @@
-.3
-.8
+.20
+.26
 
-f1 = acg + bg + cd + fg
-f2 = ac + b + e + f
-f3 = abc + bf + h
+f1 = abcde + bcdef + cdefg + defgh + efghi
+f2 = bcdef + cdefg + defgh + efghi + fghij
+f3 = cdefg + defgh + efghi + fghij + ghijk
+f4 = defgh + efghi + fghij + ghijk + hijkl
+f5 = efghi + fghij + ghijk + hijkl + ijklm
+f6 = fghij + ghijk + hijkl + ijklm + jklmn
+f7 = ghijk + hijkl + ijklm + jklmn + klmno
+f8 = hijkl + ijklm + jklmn + klmno + lmnop
+f9 = ijklm + jklmn + klmno + lmnop + mnopq
+f10 = jklmn + klmno + lmnop + mnopq + nopqr
+f11 = klmno + lmnop + mnopq + nopqr + opqrs
+f12 = lmnop + mnopq + nopqr + opqrs + pqrst
+f13 = mnopq + nopqr + opqrs + pqrst + qrstu
+f14 = nopqr + opqrs + pqrst + qrstu + rstuv
+f15 = opqrs + pqrst + qrstu + rstuv + stuvw
+f16 = pqrst + qrstu + rstuv + stuvw + tuvwx
+f17 = qrstu + rstuv + stuvw + tuvwx + uvwxy
+f18 = rstuv + stuvw + tuvwx + uvwxy + vwxyz
+f19 = qrstu + rstuv + stuvw + tuvwx + uvwxy
+f20 = pqrst + qrstu + rstuv + stuvw + tuvwx
 
 .e
+

@@ -71,7 +71,8 @@ bool isPresent(string array[], string query)
 	
 	int i = 0;
 	//cout << "Reached isPresent" << endl;
-	
+	if (array[i + 1] != "") {	
+
 	while (!array[i].empty()) {
 		if (array[i] == query) {
 			// found
@@ -80,6 +81,7 @@ bool isPresent(string array[], string query)
 		}
 		i++;
 	}
+}
 	//	cout << "Not Found." << endl;
 	return false;
 	}
@@ -303,8 +305,13 @@ bool kernelfind(string cubes[],  int position, int index)
 			func_array[index].storedposition = position;						//save the last position
 			for (int j = 0; j < 10; j++) 
 			{
+			if (cubes[j] != "") {
+			
 				func_array[index].storedtemp[func_array[index].storedindex][j] = cubes[j];
-				//cout << "The stored array at index " << func_array[index].storedindex << ": " << func_array[index].storedtemp[func_array[index].storedindex][j] << endl;
+}
+
+				cout << "The stored array at index " << func_array[index].storedindex << ": " << func_array[index].storedtemp[func_array[index].storedindex][j] << endl;
+			cout << "Value of cubes[j]: " << cubes[j] << endl;
 			}
 			func_array[index].storedindex++;
 			//cout << "BREAKPOINT VARIABLE: " << func_array[index].variables[func_array[index].storedposition] << " index: " << func_array[index].storedposition << " out of " << func_array[index].numVars << endl;
@@ -465,7 +472,7 @@ func readFunction(string in_line)
 	
 	// get array of all variables
 	
-	string vars [26];
+	string vars [27];
 	int set;
 	for (set = 0; set < 26; set++)
 	{
@@ -956,10 +963,10 @@ void computePrimeRec()
 	
 	int numKernels = printKernels(true); // returns the number of kernels = # of rows
 	
-	int numofOnes[numKernelCubes + 10]; // an array to hold the number of ones
+	int numofOnes[numKernelCubes + 100]; // an array to hold the number of ones
 	
-	string rowlocations[numKernelCubes + 10];
-	string cubes[numKernelCubes + 10];
+	string rowlocations[numKernelCubes + 100];
+	string cubes[numKernelCubes + 100];
 	
 	int counter;
 	int maxlength = 0;
@@ -990,19 +997,26 @@ void computePrimeRec()
 		}
 	}
 	int n = 0;
+	int m = 0;
 	while (maxlength > 1) {
-		
+		//cout << "numkernelcubes = " << numKernelCubes << endl;
+	 	//cout << "value of n = " << n << endl;
 		for (int k = 1; k <= numKernelCubes; k++) {
 			if (numofOnes[k] == maxlength && numofOnes[k] != 1) {
 				primeRecs[n] += "({" + rowlocations[k] + "},{" + intToString(k) + ",";
 				
-				cubes[n] = kernelCubes[k - 1]; 
-				for (int m = k + 1; m <= numKernelCubes; m++) {
+				//cout << "Value of K = " << k << endl;
+
+				if (kernelCubes[k - 1] != "" && cubes[n] != "") {
+				cubes[n] = kernelCubes[k - 1]; }
+				for (m = k + 1; m <= numKernelCubes; m++) {
 					if ((1<numofOnes[m]) && ((rowlocations[m].find(rowlocations[k])==0)||(rowlocations[k].find(rowlocations[m])))) 
 					{
 						//cout << "Row locations of " << m << " - Row locations of " << k << endl;
 						cubes[n] = cubes[n] + " + " + kernelCubes[m - 1];
 						primeRecs[n] += intToString(m) + ",";
+						
+						//maxlength--;
 					}
 					else if (m == numKernelCubes)
 					{
@@ -1010,6 +1024,7 @@ void computePrimeRec()
 						maxlength--;
 					}
 				}
+				maxlength--;
 				n++;
 			}
 		}	
