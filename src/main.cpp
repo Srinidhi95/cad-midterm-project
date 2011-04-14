@@ -66,6 +66,8 @@ string intToString(int number)
 bool isPresent(string array[], string query)
 {
 	// returns true if query is found in array[]
+	if (!query.empty()){
+	
 	
 	int i = 0;
 	//cout << "Reached isPresent" << endl;
@@ -80,6 +82,9 @@ bool isPresent(string array[], string query)
 	}
 	//	cout << "Not Found." << endl;
 	return false;
+	}
+	return false;
+
 }
 
 int lengthOfArray(string array [])
@@ -557,18 +562,30 @@ int printKernels(bool silent)
 {
 	// if silent is true then won't print to screen
 	
+	/*for (int i = 0; i < numberOfFunctions; i++){
+		string skernels[] = func_array[i].kernels;
+		string scokernels[] = func_array[i].cokernels;
+		
+		for (int m; <#condition#>; <#increment#>) {
+			<#statements#>
+		}
+		
+	}*/
+	
 	int k_count = 1;
 	
 	for (int i = 0; i < numberOfFunctions; i++) {
 		for (int j = 0; j < func_array[i].numKernels; j++) {
-			
-			if (!silent) {
+		if (!silent) {
+							cout << func_array[i].kernels[j] << endl;
+
 				//cout << k_count << '\t' << func_array[i].fid << '\t' << func_array[i].kernels[j] << endl;
 				outStream << k_count << '\t' << func_array[i].fid << '\t' << func_array[i].kernels[j] << endl;
 			}
 			k_count++;
 		}
 	}
+	
 	if (!silent) {
 		//cout << "Total Number of Kernels: " << (k_count - 1) << endl;	
 		outStream << "Total Number of Kernels: " << (k_count - 1) << endl;	
@@ -616,12 +633,15 @@ void findKernelCubes()
 		strcpy (cstr, line.c_str());
 		str1 = strtok(cstr, " + ");
 		
+		if (str1 != NULL) {
+			
+		
 		if (!isPresent(kcubes, str1)) {
 			// not found - add it to array
 			kcubes[k_count] = str1;
 			k_count++;
 		}
-		
+		}
 		
 		//cout << "first str = " << str1 << endl;
 		while (str1 != NULL) {
@@ -808,12 +828,15 @@ void createMatrix()
 			cstr = new char[line.size() + 1];
 			strcpy (cstr, line.c_str());
 			str1 = strtok(cstr, " + ");
-			if (str1 == kernelCubes[col - 1]) {
-				// found a match
-				found = 1;
-						
+			if (str1 != NULL) {
+				if (str1 == kernelCubes[col - 1]) {
+					// found a match
+					found = 1;
+					
 				}
-		
+				
+			}
+			
 			if (found == 0) {
 				while (str1 != NULL) {
 					str1 = strtok(NULL, " + ");
@@ -933,10 +956,10 @@ void computePrimeRec()
 	
 	int numKernels = printKernels(true); // returns the number of kernels = # of rows
 	
-	int numofOnes[numKernelCubes + 2]; // an array to hold the number of ones
+	int numofOnes[numKernelCubes + 10]; // an array to hold the number of ones
 	
-	string rowlocations[numKernelCubes + 2];
-	string cubes[numKernelCubes + 2];
+	string rowlocations[numKernelCubes + 10];
+	string cubes[numKernelCubes + 10];
 	
 	int counter;
 	int maxlength = 0;
