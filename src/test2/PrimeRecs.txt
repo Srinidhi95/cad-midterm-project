@@ -1,0 +1,10 @@
+Prime Rectangles: 
+({7,8,9},{5,8		 + bd
+({7,8},{7,8		 + bd
+
+Total Number of Prime Rectangles: 2
+
+({7,8,9},{5,8		ac + bd
+({7,8},{7,8		bc + bd
+
+Number of Candidate Rectangles: 2

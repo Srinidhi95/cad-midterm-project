@@ -1,0 +1,12 @@
+Prime Rectangles: 
+({1,2,3,4},{3,4		 + d
+({1,2,3},{1,2,3,4		 + b + c + d
+({2,3},{4		
+
+Total Number of Prime Rectangles: 3
+
+({1,2,3,4},{3,4		c + d
+({1,2,3},{1,2,3,4		a + b + c + d
+({2,3},{4		d
+
+Number of Candidate Rectangles: 3
