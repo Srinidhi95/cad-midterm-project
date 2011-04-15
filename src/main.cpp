@@ -307,11 +307,11 @@ bool kernelfind(string cubes[],  int position, int index)
 			{
 			if (cubes[j] != "") {
 			
-				func_array[index].storedtemp[func_array[index].storedindex][j] = cubes[j];
+			func_array[index].storedtemp[func_array[index].storedindex][j] = cubes[j];
 }
 
-				cout << "The stored array at index " << func_array[index].storedindex << ": " << func_array[index].storedtemp[func_array[index].storedindex][j] << endl;
-			cout << "Value of cubes[j]: " << cubes[j] << endl;
+				//cout << "The stored array at index " << func_array[index].storedindex << ": " << func_array[index].storedtemp[func_array[index].storedindex][j] << endl;
+			//cout << "Value of cubes[j]: " << cubes[j] << endl;
 			}
 			func_array[index].storedindex++;
 			//cout << "BREAKPOINT VARIABLE: " << func_array[index].variables[func_array[index].storedposition] << " index: " << func_array[index].storedposition << " out of " << func_array[index].numVars << endl;
@@ -406,10 +406,10 @@ func readFunction(string in_line)
 	// parse each function
     
 	func cur_func;
-	int fid; // function id
+	int fid = 0; // function id
 	int nCubes = 0; // number of cubes
 	
-	char * str1;
+	char * str1 = "";
 	
 	string line = in_line;
 	
@@ -448,7 +448,7 @@ func readFunction(string in_line)
 	
 	//cout << "Function ID: " << cur_func.fid << endl;
 	
-	char * cstr;
+	char * cstr = "";
 	cstr = new char[line.size() + 1];
 	strcpy (cstr, line.c_str());
 	
@@ -470,10 +470,10 @@ func readFunction(string in_line)
 	}
 	
 	
-	// get array of all variables
+	// get array of all variables in this particular function
 	
-	string vars [27];
-	int set;
+	string vars [26];
+	int set = 0;
 	for (set = 0; set < 26; set++)
 	{
 		vars[set] = "";
@@ -483,25 +483,28 @@ func readFunction(string in_line)
 	int x = 0;
 	int j = 0;
 	int k = 0;
-	
-	for (j = 0; j < numberOfCubes; j++) {
+	//cout << "Number of cubes: " << nCubes << endl;
+	for (j = 0; j < nCubes; j++) {
 		for (k = 0; k < cur_func.cubes[j].length(); k++) {
 		
 			temp = cur_func.cubes[j][k]; 
-			
-			if (!isPresent(vars, temp)) {
-				// not found
-				vars[x] = cur_func.cubes[j][k];
-				x++;
+			//cout << "temp = " << temp << endl;
+			if (x < 27) {
+				if (!isPresent(vars, temp)) {
+					// not found	
+					vars[x] = cur_func.cubes[j][k];
+					
+					x++;
+				}
 			}
 		}
 	}
 	
 	int numVars = x;
 	
-	string temp2;
+	string temp2 = "";
 	int flag = 1; 
-	 int m = 0;
+	int m = 0;
 	// n = 0;
 	
 	
@@ -1281,7 +1284,6 @@ int main (int argc, char* argv[])
 				exit(1);
 			}
 		}
-		
 		if (line[0] == '.' && FUNC_FLAG == 0) {
 			if (line[2] == '\n') {
 				numberOfFunctions = ((int)line[1] - 48);

@@ -1,0 +1,5 @@
+1	1	a + b + c
+2	2	a + b + c + d
+3	3	a + c + d
+4	4	b + c
+Total Number of Kernels: 4
